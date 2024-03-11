@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Male_Fashion Template">
+    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>STAG MEN FASHION</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/style.css" type="text/css">
+    <link href="/public/adminassets/css/main.css" rel="stylesheet" type="text/css" />
+    <script src="path/to/jquery.min.js"></script>
+    <script src="path/to/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+    .btn-customized {
+        color: #000;
+        background-color: #f3f2ee;
+        border: none;
+        font-weight: bold;
+    }
+
+    .btn-customized.disabled {
+        background-color: #f8f8f8;
+        opacity: 50%;
+    }
+</style>
+
+<body>
+
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__option">
+            <div class="offcanvas__links">
+                <% if(userID){%>
+                    <a href="/logout">Log out</a>
+                    <%} else { %>
+                        <a href="login">Log in</a>
+                        <%}%>
+                            <a href="#">FAQs</a>
+            </div>
+            <div class="offcanvas__top__hover">
+                <%if(userID){%>
+                    <a href="/profile">
+                        <span>Profile <i class="arrow_carrot"></i></span>
+                    </a>
+                    <%} else {%>
+                        <a href="login"></a>
+                        <% } %>
+            </div>
+        </div>
+        <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch"><img src="/public/img/icon/search.png" alt=""></a>
+            <a href="#"><img src="/public/img/icon/heart.png" alt=""></a>
+            <a href="/cart"><img src="/public/img/icon/cart.png" alt=""> <span>0</span></a>
+            <div class="price"></div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__text">
+            <p>Free shipping, 30-day return or refund guarantee.</p>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right">
+                            <div class="header__top__links">
+                                <% if(userID){%>
+                                    <a href="/logout">Log out</a>
+                                    <%} else { %>
+                                        <a href="login">Log in</a>
+                                        <%}%>
+                                            <a href="#">FAQs</a>
+                            </div>
+                            <div class="header__top__hover">
+                                <%if(userID){%>
+                                    <a href="/profile">
+                                        <span>Profile <i class="arrow_carrot"></i></span>
+                                    </a>
+                                    <%} else {%>
+                                        <a href="login"></a>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a href="./index.html"><img src="/public/img/logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="active"><a href="/shop">Shop</a></li>
+                            <li><a href="#">Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href="./about.html">About Us</a></li>
+                                    <li><a href="./shop-details.html">Shop Details</a></li>
+                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
+                                    <li><a href="./checkout.html">Check Out</a></li>
+                                    <li><a href="./blog-details.html">Blog Details</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="./blog.html">Blog</a></li>
+                            <li><a href="./contact.html">Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+                        <a href="#" class="search-switch"><img src="/public/img/icon/search.png" alt=""></a>
+                        <a href="#"><img src="/public/img/icon/heart.png" alt=""></a>
+                        <a href="/cart"><img src="/public/img/icon/cart.png" alt=""></a>
+                        <div class="price"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shopping Cart</h4>
+                        <div class="breadcrumb__links">
+                            <a href="./index.html">Home</a>
+                            <a href="./shop.html">Shop</a>
+                            <span>Shopping Cart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+        <% if(locals.ucart) { %>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="shopping__cart__table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Size</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <% ucart.items.forEach(element=>{%>
+                                        <div id="productInfo_<%= element.productID %>"
+                                            data-product-id="<%= element.productID %>" data-size="<%= element.size %>">
+                                        </div>
+                                        <tr>
+                                            <td class="product__cart__item">
+                                                <div class="product__cart__item__pic">
+                                                    <img src="/uploads/<%= element.productID.image[0] %>"
+                                                        class="img-sm img-thumbnail" alt="">
+                                                </div>
+                                                <div class="product__cart__item__text">
+                                                    <h6>
+                                                        <%= element.productID.name %>
+                                                    </h6>
+                                                    <h5>RS:<%= element.productID.price.salesPrice %>
+                                                    </h5>
+                                                </div>
+                                            </td>
+                                            <td class="">
+
+                                                <button class="btn btn-customized me-2"
+                                                    id="btn_minus_<%= element.productID %>"
+                                                    onclick="decrementPdtQuantity(`<%=element.productID._id %>`,`<%= element.size %>`)">-</button>
+                                                <span class="qty" id="quantity_<%= element.productID %>">
+                                                    <%= element.quantity %>
+                                                </span>
+                                                <button class="btn btn-customized ms-2"
+                                                    id="btn_plus_<%= element.productID%>"
+                                                    onclick="incrementPdtQuantity(`<%= element.productID._id %>`, `<%= element.size %>`)">+</button>
+
+
+                                            </td>
+                                            <td class="cart__price">
+                                                <%= element.size %>
+                                            </td>
+                                            <td class="cart__price">
+                                                <%= element.price %>
+                                            </td>
+                                            <td><i class="fa fa-close"
+                                                    onclick="removeProduct(`<%=element.productID._id %>`,`<%= element.size %>`)"></i>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn">
+                                    <a href="#">Continue Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="cart__discount">
+                            <h6>Discount codes</h6>
+                            <form action="#">
+                                <input type="text" placeholder="Coupon code">
+                                <button type="submit">Apply</button>
+                            </form>
+                        </div>
+                        <div class="cart__total">
+                            <h6>Cart total</h6>
+                            <ul>
+                                <li>Subtotal <span>
+                                        <%= ucart.totalPrice %>
+                                    </span></li>
+                                <li>Total <span>
+                                        <%= ucart.totalPrice %>
+                                    </span></li>
+                            </ul>
+                            <a href="/checkout"><button class="primary-btn">Proceed to checkout</button></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } else {%>
+                <div id="text-center" style="text-align:center">
+                    <h4>Cart is Empty!!! Please add items to the cart</h4>
+                </div>
+                <% } %>
+    </section>
+    <!-- Shopping Cart Section End -->
+    <div class="containerabove"></div>
+    <!-- Footer Section Begin -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a href="#"><img src="/public/img/footer-logo.png" alt=""></a>
+                        </div>
+                        <p>The customer is at the heart of our unique business model, which includes design.</p>
+                        <a href="#"><img src="/public/img/payment.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Trending Shoes</a></li>
+                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Sale</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Payment Methods</a></li>
+                            <li><a href="#">Delivary</a></li>
+                            <li><a href="#">Return & Exchanges</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>NewLetter</h6>
+                        <div class="footer__newslatter">
+                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                            <form action="#">
+                                <input type="text" placeholder="Your email">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer__copyright__text">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        <p>Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>2020
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        </p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
+    <script>
+        const qty = document.getElementsByClassName('qty')
+        function incrementPdtQuantity(productID, size) {
+            console.log('Button clicked for productID:', productID, 'and size:', size);
+
+            fetch('/increment', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productID, size })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Increment the quantity in the DOM
+                        qty.innerText = parseInt(qty.innerText) + 1;
+
+                        // Show success message using SweetAlert
+
+                        window.location.reload()
+                        // Optionally, you can handle other logic after success
+
+                    } else {
+                        // Show error message using SweetAlert
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message || 'An error occurred while incrementing quantity.',
+                        });
+
+                        // Optionally, you can handle other logic after error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Show error message using SweetAlert
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred.',
+                    });
+                });
+
+
+        }
+
+        function decrementPdtQuantity(productID, size) {
+            fetch('/decrement', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productID, size })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Decrement the quantity in the DOM
+                        qty.innerText = parseInt(qty.innerText) - 1;
+
+                        // Show success message using SweetAlert
+                        window.location.reload()
+
+                        // Optionally, you can handle other logic after success
+
+                    } else {
+                        // Show error message using SweetAlert
+                        swal.fire({
+                            icon: 'error',
+                            title: '',
+                            text: data.message,
+                        });
+
+                        // Optionally, you can handle other logic after error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Show error message using SweetAlert
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred.',
+                    });
+                });
+
+        }
+
+        function removeProduct(productID, size) {
+            swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/remove', {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ productID, size }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    swal.fire({
+                                        icon: 'success',
+                                        title: 'Product Removed',
+                                        text: 'The product has been removed from the cart successfully.',
+                                    })
+                                        .then(() => {
+                                            window.location.reload();
+                                        });
+                                } else {
+                                    swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message || 'An error occurred while removing the product from the cart.',
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An unexpected error occurred.',
+                                });
+                            });
+                    }
+                });
+
+        }
+
+
+    </script>
+
+    <!-- Js Plugins -->
+    <script src="/public/js/jquery-3.3.1.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script src="/public/js/jquery.nice-select.min.js"></script>
+    <script src="/public/js/jquery.nicescroll.min.js"></script>
+    <script src="/public/js/jquery.magnific-popup.min.js"></script>
+    <script src="/public/js/jquery.countdown.min.js"></script>
+    <script src="/public/js/jquery.slicknav.js"></script>
+    <script src="/public/js/mixitup.min.js"></script>
+    <script src="/public/js/owl.carousel.min.js"></script>
+    <script src="/public/js/main.js"></script>
+</body>
+
+</html>

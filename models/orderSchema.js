@@ -1,0 +1,69 @@
+const mongoose = require('mongoose')
+
+const orderSchema = new mongoose.Schema({
+    user:{
+        type:String
+    },
+    address:{
+        name:{
+            type:String,
+        },
+        mobile:{
+            type:Number,
+        },
+        pincode:{
+            type:Number,
+        },
+        locality:{
+            type:String,
+        },
+        Address:{
+            type:String,
+        },
+        city:{
+            type:String,
+        },
+        state:{
+            type:String, 
+        },
+        country:{
+            type:String,
+        }
+        
+    },
+    products:[{
+        product:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Product'
+        },
+        quantity:{
+            type:Number,
+            require:true
+        },
+        size:{
+            type:String,
+            required:true
+        }
+    }],
+    coupon:{
+        type:String
+    },
+    totalamount:{
+        type:Number,
+        required:true
+    },
+    paymentmethod:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:String,
+        default:"Confirmed"
+    },
+    createdAt:{
+        type:String,
+        required:true
+    }
+})
+
+module.exports = new mongoose.model('Order',orderSchema)
