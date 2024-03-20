@@ -54,7 +54,7 @@
                <%} else { %>
                    <a href="login">Log in</a>
                <%}%>
-               <a href="#">FAQs</a>
+              
            </div>
            <div class="offcanvas__top__hover">
                <%if(userID){%>
@@ -97,7 +97,7 @@
                                 <%} else { %>
                                     <a href="login">Log in</a>
                                 <%}%>
-                                <a href="#">FAQs</a>
+                               
                             </div>
                             <div class="header__top__hover">
                                 <%if(userID){%>
@@ -124,18 +124,9 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li><a href="/">Home</a></li>
-                            <li class="active"><a href="/shop">Shop</a></li>
+                            <li class=""><a href="/shop">Shop</a></li>
                             <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                                
                         </ul>
                     </nav>
                 </div>
@@ -173,53 +164,55 @@
         <!-- Breadcrumb Section End -->
 
         <section class="mt-50 mb-50">
-            <% if(locals.wishlist){%> 
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table class="table shopping-summery text-center">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col" colspan="2">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Stock Status</th>
-                                        <th scope="col">Action</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    <% wishlist.items.forEach(element =>{ %> 
-                                    <tr>
-                                        <td class="image product-thumbnail">
-                                        <div class="product__cart__item__pic">
-                                            <img src="/uploads/<%= element.product.image[0] %>"  class="img-sm img-thumbnail" alt="">
-                                        </div>
-                                        </td>
-                                        <td class="product-des product-name">
-                                            <h5 class="product-name"><a href="shop-product-right.html"><%= element.product.name %></a></h5>
-                                            <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                            </p>
-                                        </td>
-                                        <td class="price" data-title="Price"><span><%= element.product.price.salesPrice %></span></td>
-                                        <td class="text-center" data-title="Stock">
-                                            <span class="color3 font-weight-bold">In Stock</span>
-                                        </td>
-                                        <td class="text-right" data-title="Cart">
-                                            <a href="/"><button class="btn btn-sm"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button></a>
-                                        </td>
-                                        <td><i class="fi-rs-trash" onclick="removeFromWishlist(`<%= element.product._id %>`)"></i></td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
+            <% if(!locals.wishlist||wishlist.items.length == 0 ){%> 
+                <div  id="text-center" style="text-align:center"><h4>Wishlist is Empty!!! Please add items to the Wishlist</h4></div>
+            
+                <%}else{%>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table shopping-summery text-center">
+                                        <thead>
+                                            <tr class="main-heading">
+                                                <th scope="col" colspan="2">Product</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Stock Status</th>
+                                                <th scope="col">Action</th>
+                                                <th scope="col">Remove</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+        
+                                            <% wishlist.items.forEach(element =>{ %> 
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                <div class="product__cart__item__pic">
+                                                    <img src="/uploads/<%= element.product.image[0] %>"  class="img-sm img-thumbnail" alt="">
+                                                </div>
+                                                </td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= element.product.name %></a></h5>
+                                                    <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
+                                                    </p>
+                                                </td>
+                                                <td class="price" data-title="Price"><span><%= element.product.price.salesPrice %></span></td>
+                                                <td class="text-center" data-title="Stock">
+                                                    <span class="color3 font-weight-bold">In Stock</span>
+                                                </td>
+                                                <td class="text-right" data-title="Cart">
+                                                    <a href="/"><button class="btn btn-sm"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button></a>
+                                                </td>
+                                                <td><i class="fi-rs-trash" onclick="removeFromWishlist(`<%= element.product._id %>`)"></i></td>
+                                            </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-                <%}else{%>
-                    <div  id="text-center" style="text-align:center"><h4>Wishlist is Empty!!! Please add items to the Wishlist</h4></div>
+                    
                 <%}%>
            
         </section>

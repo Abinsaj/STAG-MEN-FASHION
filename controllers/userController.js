@@ -10,6 +10,8 @@ const generateOtp = require("../controllers/otpController/generateOtp")
 const Wallet = require('../models/walletSchema')
 const { v4:uuidv4} = require('uuid')
 const Category = require('../models/categorySchema')
+const Order = require('../models/orderSchema')
+const Review = require('../models/reviewSchema')
 
 
 
@@ -179,7 +181,6 @@ const loadLogin = async (req, res) => {
 
 const verifyLogin = async (req, res) => {
     try {
-        console.log('getting inside');
         const email = req.body.email
         const password = req.body.password
 
@@ -203,11 +204,14 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
+        const sort = req.query.item
         const userID = req.session.user
         const user = await User.findOne({ _id: userID })
-        console.log('user :' + user);
+        if(sort == 'newarrival'){
+            const product = await Product.find({ isActive: true }).sort({ createdAt: -1 }).limit(8)
+            res.render('home', { user, product, userID })
+        }
         const product = await Product.find({ isActive: true })
-        console.log(product);
         res.render('home', { user, product, userID })
     } catch (error) {
         console.log(error.message);
@@ -216,15 +220,37 @@ const loadHome = async (req, res) => {
 
 const getProductDetails = async (req, res) => {
     try {
+        const id = req.query.id
+        const product = await Product.findOne({ _id: id })
+        const category = await Category.findById({_id:product.category})
+        let discount;
+        if(category.offer.discount){
+            discount=(product.price.regularPrice*category.offer.discount)/100
+
+        }
+        let amount = product.price.regularPrice-discount
+        let offer
+        if(amount<product.price.salesPrice){
+            offer=amount
+        }else{
+            offer = product.price.salesPrice
+        }
+        if(offer==null){
+            offer==amount
+        }
+
+
         const userID = req.session.user
         const user = await User.find({ _id: userID })
         const cart = await Cart.findOne({user:userID}).populate('items.productID')
-        console.log('the cart is ',cart);
-        const id = req.query.id
+       
 
-        const product = await Product.findOne({ _id: id })
+     
+        const relatedpdt = await Product.find({category:product.category})
 
-        res.render('productDetails', { product, user, userID, })
+        const review = await Review.find({product:id})
+      
+        res.render('productDetails', { product, user, userID, review ,relatedpdt, offer })
 
     } catch (error) {
         console.log(error.message);
@@ -276,7 +302,6 @@ const getaddresses = async (req, res) => {
     try {
         const userID = req.session.user
         const addresses = await Address.find({ user: userID })
-        console.log(addresses);
         res.render('addresses', { addresses, userID })
     } catch (error) {
         console.log(error.message);
@@ -296,9 +321,7 @@ const getaddAddress = async (req, res) => {
 const userProfile = async (req, res) => {
     try {
         const userID = req.session.user
-        console.log(userID);
         const user = await User.find({ _id: userID })
-        console.log(user);
         res.render('profile', { user, userID })
     } catch (error) {
         console.log(error.message);
@@ -310,7 +333,6 @@ const postaddAddress = async (req, res) => {
 
         const { name, mobile, pincode, locality, address, city, state, addressType, country } = req.body
         const user = req.session.user
-        console.log(user);
         if (!user) {
             res.redirect('/login')
         } else {
@@ -327,7 +349,6 @@ const postaddAddress = async (req, res) => {
 
             })
             const addresses = await useraddress.save()
-            console.log(addresses);
             res.redirect('/addresses')
         }
 
@@ -341,7 +362,6 @@ const editAddress = async (req, res) => {
         const userID = req.query._id
         req.session.aid = userID
         const address = await Address.findOne({ _id: userID })
-        console.log(address);
         res.render('editaddress', { address, userID })
     } catch (error) {
         console.log(error.message);
@@ -351,7 +371,6 @@ const editAddress = async (req, res) => {
 const postEditAddress = async (req, res) => {
     try {
         const aid = req.session.aid
-        console.log(aid);
         const { name, mobile, pincode, locality, address, city, state, addressType, country } = req.body
         const newaddress = await Address.findOneAndUpdate({ _id: aid }, {
             $set: {
@@ -377,7 +396,6 @@ const deleteAddress = async (req, res) => {
     try {
         const aid = req.query._id
         const addr = await Address.findOneAndDelete({ _id: aid })
-        console.log(addr);
         if (addr) {
             res.redirect('/addresses')
         }
@@ -390,7 +408,7 @@ const getCart = async (req, res) => {
     try {
         const userID = req.session.user
         const ucart = await Cart.findOne({ user: userID }).populate('items.productID')
-        console.log(ucart);
+        
         if (ucart == null) {
             res.render('cart', { userID })
         } else {
@@ -446,8 +464,28 @@ const getShop = async (req, res) => {
         console.log('the category',category);
         const userID = req.session.user
         const user = await User.findOne({ _id: userID })
+
+        const sort = req.query.sort
+        if(sort == 'lowtohigh'){
+            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': 1}).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category })
+        }
+        if(sort == 'hightolow'){
+
+            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': -1}).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category })
+        }
+        if(sort == 'aAzZ'){
+            const product = await Product.find({ isActive: true }).sort({name: 1}).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category })
+        }
+        if(sort == 'zZaA'){
+            const product = await Product.find({ isActive: true }).sort({name: -1}).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category })
+        }
+
         const product = await Product.find({ isActive: true }).skip(pdtskip).limit(pageSize)
-        res.render('shop', { user, product, userID,numofPage, })
+        res.render('shop', { user, product, userID,numofPage,category })
     } catch (error) {
         console.log(error.message);
     }
@@ -582,75 +620,6 @@ const postPasswordset = async (req, res) => {
     }
 }
 
-const productLowtohigh = async (req, res) => {
-    try {
-        const page = req.query.page || 1
-        const pageSize = 9
-        const pdtskip = (page-1)*pageSize
-        const pdtcount = await Product.find({ isActive: true }).count()
-        const numofPage = Math.ceil(pdtcount/pageSize)
-        const userID = req.session.user
-        const product = await Product.find({ isActive: true }).sort({ 'price.salesPrice': 1 }).skip(pdtskip).limit(pageSize);
-        res.render('shop', { product, userID,numofPage });
-    } catch (error) {
-        console.log(error.message);
-        // Handle the error and send an appropriate response
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-
-const productHightolow = async (req, res) => {
-    try {
-        const page = req.query.page || 1
-        const pageSize = 9
-        const pdtskip = (page-1)*pageSize
-        const pdtcount = await Product.find({ isActive: true }).count()
-        const numofPage = Math.ceil(pdtcount/pageSize)
-        const userID = req.session.user
-        const product = await Product.find({ isActive: true }).sort({ 'price.salesPrice': -1 }).skip(pdtskip).limit(pageSize);
-        res.render('shop', { product, userID ,numofPage });
-    } catch (error) {
-        console.log(error.message);
-        // Handle the error and send an appropriate response
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-const aAzZ = async (req, res) => {
-    try {
-        const page = req.query.page || 1
-        const pageSize = 9
-        const pdtskip = (page-1)*pageSize
-        const pdtcount = await Product.find({ isActive: true }).count()
-        const numofPage = Math.ceil(pdtcount/pageSize)
-        const userID = req.session.user
-        const product = await Product.find({ isActive: true }).sort({ name: 1 }).skip(pdtskip).limit(pageSize);
-        res.render('shop', { product, userID ,numofPage  });
-    } catch (error) {
-        console.log(error.message);
-        // Handle the error and send an appropriate response
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-const zZaA = async (req, res) => {
-    try {
-        const page = req.query.page || 1
-        const pageSize = 9
-        const pdtskip = (page-1)*pageSize
-        const pdtcount = await Product.find({ isActive: true }).count()
-        const numofPage = Math.ceil(pdtcount/pageSize)
-        const userID = req.session.user
-        const product = await Product.find({ isActive: true }).sort({ name: -1 }).skip(pdtskip).limit(pageSize);
-        res.render('shop', { product, userID,numofPage });
-    } catch (error) {
-        console.log(error.message);
-        // Handle the error and send an appropriate response
-        res.status(500).send('Internal Server Error');
-    }
-}
-
 const newArrival = async (req, res) => {
     try {
         const userID = req.session.user
@@ -664,53 +633,58 @@ const newArrival = async (req, res) => {
     }
 }
 
-// const productSorting = async (req, res) => {
-//     try {
-//         const { sort } = req.query;
-//         let sortedProducts;
-
-//         if (sort === 'low-to-high') {
-//             sortedProducts = await Product.find({ isActive: true }).sort({ 'price.salesPrice': 1 });
-            
-//         } else if (sort === 'high-to-low') {
-//             sortedProducts = await Product.find({ isActive: true }).sort({ 'price.salesPrice': -1 });
-//             console.log(sortedProducts);
-//         } else if (sort === 'a-Z') {
-//             sortedProducts = await Product.find({ isActive: true }).sort({ name: 1 });
-//         } else if (sort === 'z-A') {
-//             sortedProducts = await Product.find({ isActive: true }).sort({ name: -1 });
-//         }
-
-//         res.status(200).json({ success: true, sortedProducts });
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).json({ success: false, error: error.message });
-//     }
-// };
 
 const getCategory=async(req,res)=>{
     try {
-        console.log('jhgfkldhkj;dgf;kadjkf;db');
-        const id=req.query.id;
-        const findCat=await Category.findById({_id:id})
-        console.log(findCat);
+        const userID = req.session.user
+        const user = await User.findOne({ _id: userID })
         const category=await Category.find({isActive:true})
         const page = req.query.page || 1
         const pageSize = 9
         const pdtskip = (page-1)*pageSize
         const pdtcount = await Product.find({ isActive: true }).count()
         const numofPage = Math.ceil(pdtcount/pageSize)
-        
-        const product = await Product.find({ isActive: true ,category:findCat._id}).skip(pdtskip).limit(pageSize)
-        const userID = req.session.user
-        const user = await User.findOne({ _id: userID })
 
-        res.render('category', { user, product, userID,numofPage, category })
+        const id=req.query.id;
+        const findCat=await Category.findById({_id:id})
+        const sort = req.query.sort
+        if(sort == 'lowtohigh'){
+            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': 1}).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat})
+        }
+        if(sort == 'hightolow'){
+            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': -1}).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat})
+        }
+        if(sort == 'aAzZ'){
+            const product = await Product.find({category:findCat._id}).sort({ name: 1 }).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat})
+        }
+        if(sort == 'zZaA'){
+            const product = await Product.find({category:findCat._id}).sort({ name: -1 }).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat})
+        }
+        const product = await Product.find({category:findCat._id}).skip(pdtskip).limit(pageSize)
+        
+        res.render('category', { user, product, userID, numofPage, category, findCat })
         
     } catch (error) {
         console.log(error.message)
     }
 }
+
+const getInvoice = async(req,res)=>{
+    try {
+        const oid = req.query.id
+        console.log('the order id is',oid);
+        const order = await Order.find({_id:oid}).populate("products.product")
+        console.log('the order is',order);
+        res.render('invoice',{order})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 module.exports = {
@@ -742,11 +716,7 @@ module.exports = {
     postforgetResendOtp,
     getPasswordset,
     postPasswordset,
-    productLowtohigh,
-    productHightolow,
-    aAzZ,
-    zZaA,
     newArrival,
-    getCategory
-    
+    getCategory,
+    getInvoice,
 }

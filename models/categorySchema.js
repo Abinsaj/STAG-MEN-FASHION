@@ -11,6 +11,17 @@ const categoryShema = new mongoose.Schema({
         type:String,
         required:true
     },
+    offer:{
+        discount:{
+            type:Number
+        },
+        startDate:{
+            type:String
+        },
+        endDate:{
+            type:String
+        }
+    },
     isActive:{
         type:Boolean,
         default:true

@@ -46,6 +46,7 @@
                         <a href="productList">Product List</a>
                        
                         <a href="Categories">Categories</a>
+                        <a href="categoryOffer">Categoty Offer</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu active">
@@ -55,7 +56,7 @@
                     <div class="submenu">
                         <a href="orderlist">Order list </a>
                         
-                        <a href="page-orders-detail.html">Order detail</a>
+                      
                     </div>
                 </li>
                 <!-- <li class="menu-item has-submenu">
@@ -104,7 +105,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="salesReport"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="salesReport"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Sales Report</span>
                     </a>
                 </li>
@@ -254,9 +255,9 @@
                                     <% order.forEach(el =>{ %> 
                                     <h6 class="mb-1">Customer</h6>
                                     <p class="mb-1">
-                                        <%= el.user.name %> <br> <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f"> <%= el.user.email %> </template> <br> <%= el.user.mobile %> 
+                                        <%= el.user %> <br> <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f"> <%= el.user.email %> </template> <br> <%= el.user.mobile %> 
                                     </p>
-                                    <a href="#">View profile</a>
+                                    <!-- <a href="#">View profile</a> -->
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -270,7 +271,7 @@
                                     <p class="mb-1">
                                         Shipping: Fargo express <br> <%= el.paymentmethod %> <br> 
                                     </p>
-                                    <a href="#">Download info</a>
+                                    <!-- <a href="#">Download info</a> -->
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -284,7 +285,7 @@
                                     <p class="mb-1">
                                         <%= el.address.city %><br><%= el.address.Address %> <br>
                                     </p>
-                                    <a href="#">View profile</a>
+                                    <!-- <a href="#">View profile</a> -->
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -296,7 +297,9 @@
                                     <thead>
                                         <tr>
                                             <th width="40%">Product</th>
+                                            <th width="20%">Coupon</th>
                                             <th width="20%">Unit Price</th>
+                                            <th width="20%">Discount</th>
                                             <th width="20%">Quantity</th>
                                             <th width="20%" class="text-end">Total</th>
                                         </tr>
@@ -315,11 +318,14 @@
                                                     <div class="info"> <%= element.product.name %> </div>
                                                 </a>
                                             </td>
+                                            <td><%= el.coupon %></td>
                                             <td> <%= element.product.price.salesPrice %> </td>
+                                            <%var percentage = ((element.product.price.salesPrice*element.quantity-el.totalamount)/(element.product.price.salesPrice*element.quantity))*100%>
+                                            <td><%= el.discount %>%</td>
                                             <td> <%= element.quantity %> </td>
                                             <td class="text-end"> <%= el.totalamount %> </td>
                                         </tr>
-                                       
+                                       <td></td>
                                        
                                         <tr>
                                             <td colspan="4">
@@ -379,7 +385,7 @@
                 <div class="col-sm-6">
                     <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
                     document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
+                    </script> ©,STAG MEN FASION
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end">
@@ -431,7 +437,7 @@
                                     text: 'The status has been successfully changed.',
                                     icon: 'success'
                                 }).then(() => {
-                                    // Additional logic or page refresh if needed
+                                    
                                     window.location.reload();
                                 });
                             } else {

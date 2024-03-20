@@ -48,6 +48,9 @@ const orderSchema = new mongoose.Schema({
     coupon:{
         type:String
     },
+    discount:{
+        type:Number
+    },
     totalamount:{
         type:Number,
         required:true
@@ -60,10 +63,10 @@ const orderSchema = new mongoose.Schema({
         type:String,
         default:"Confirmed"
     },
-    createdAt:{
+    date:{
         type:String,
         required:true
     }
-})
+},{versionKey:false,timestamps:true})
 
 module.exports = new mongoose.model('Order',orderSchema)

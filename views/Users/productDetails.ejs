@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="/public/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="/public/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/public/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/public/assets/css/maind134.css?v=3.4">
+
 
     <!-- Include Toastr from CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -55,7 +57,7 @@
                     <%} else { %>
                         <a href="login">Log in</a>
                         <%}%>
-                            <a href="#">FAQs</a>
+                            
             </div>
             <div class="offcanvas__top__hover">
                 <%if(userID){%>
@@ -69,7 +71,7 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="/public/img/icon/search.png" alt=""></a>
-            <a href="#"><img src="/public/img/icon/heart.png" alt=""></a>
+            <a href="/wishlist"><img src="/public/img/icon/heart.png" alt=""></a>
             <a href="/cart"><img src="/public/img/icon/cart.png" alt=""> <span>0</span></a>
             <div class="price"></div>
         </div>
@@ -102,7 +104,7 @@
                                             <%}%>
 
                                                 <% }) %>
-                                                    <a href="#">FAQs</a>
+                                           
                             </div>
                             <div class="header__top__hover">
                                 <%if(userID){%>
@@ -129,18 +131,17 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li><a href="/">Home</a></li>
-                            <li class="active"><a href="./shop.html">Shop</a></li>
+                            <li class=""><a href="/shop">Shop</a></li>
                             <li><a href="#">Pages</a>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                           
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="/public/img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="/public/img/icon/heart.png" alt=""></a>
+                        <a href="/wishlist"><img src="/public/img/icon/heart.png" alt=""></a>
                         <a href="/cart"><img src="/public/img/icon/cart.png" alt=""> <span>0\</span></a>
 
                     </div>
@@ -210,9 +211,12 @@
                                 <i class="fa fa-star-o"></i>
                                 <span> - 5 Reviews</span>
                             </div>
-                            <h3>Rs:<%=product.price.salesPrice %><span>
-                                        <%=product.price.regularPrice %>
-                                    </span></h3>
+                            <% if (offer) { %>
+                                <% var percentage = (product.price.regularPrice-offer)/product.price.regularPrice *100 %>
+                                <h3>₹ <%= offer.toFixed() %><span><%= product.price.regularPrice %></span></h3>
+                            <h5><%= percentage.toFixed() %>%</h5>
+                            <% } %>
+                            
                             <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
                                 cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
                                 with placket.</p>
@@ -221,17 +225,21 @@
                                     <span>Size:</span>
 
                                     <label class="" for="l">s
-                                        <a href="#" onclick="selectSizeS('<%= product.size.s.small %>')">
+                                        <a href="#"
+                                            onclick="selectSizeS('<%= product.size.s.small %>','<%= product._id %>')">
                                             <input type="radio" value="<%= product.size.s.small %>" id="l">
+
                                         </a>
                                     </label>
                                     <label for="m">m
-                                        <a href="#" onclick="selectSizeM('<%= product.size.s.small %>')">
+                                        <a href="#"
+                                            onclick="selectSizeM('<%= product.size.s.small %>','<%= product._id %>')">
                                             <input type="radio" value="<%= product.size.s.small %>" id="m">
                                         </a>
                                     </label>
                                     <label for="sm">l
-                                        <a href="#" onclick="selectSizeL('<%= product.size.s.small %>')">
+                                        <a href="#"
+                                            onclick="selectSizeL('<%= product.size.s.small %>','<%= product._id %>')">
                                             <input type="radio" value="<%= product.size.s.small %>" id="sm">
                                         </a>
                                     </label>
@@ -239,13 +247,15 @@
 
                             </div>
                             <div class="product__details__cart__option">
+                                <div id="stock-display"><p class="text-danger"><span id="stock-value"></p></span></div>
+
                                 <input type="hidden" value="" name="size" id="sizz">
                                 <span id="sizeErrorMessage" style="color: red;"></span>
 
-                          
-                                
+
+
                                 <a onclick="addToCart(`<%= product._id%>`)" class="primary-btn" ]>add to cart</a>
-                                
+
 
                             </div>
                             <div class="product__details__btns__option">
@@ -268,22 +278,22 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="product__details__tab">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#tabs-5"
+                            <!-- <ul class=" nav" role=""> -->
+                            <!-- <li class="nav-item">
+                                    <a class="nav-link " data-toggle="tab" href="#tabs-5"
                                         role="tab">Description</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Customer
+                                </li> -->
+                            <!-- <li class="nav">
+                                    <a class="nav-link active" data-toggle="tab" href="#tabs-6" role="tab">Customer
                                         Previews(5)</a>
-                                </li>
-                                <li class="nav-item">
+                                </li> -->
+                            <!-- <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">Additional
                                         information</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                </li> -->
+                            <!-- </ul> -->
+                            <div class="content">
+                                <!-- <div class="tab-pane active" id="tabs-5" role="tabpanel">
                                     <div class="product__details__tab__content">
                                         <p class="note">Nam tempus turpis at metus scelerisque placerat nulla deumantos
                                             solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
@@ -306,34 +316,169 @@
                                                 worn all year round.</p>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="tab-pane" id="tabs-6" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
-                                                capabilities as a modern PC. These handy little devices allow
-                                                individuals to retrieve and store e-mail messages, create a contact
-                                                file, coordinate appointments, surf the internet, exchange text messages
-                                                and more. Every product that is labeled as a Pocket PC must be
-                                                accompanied with specific software to operate the unit and must feature
-                                                a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
-                                                was substantial during it’s early release. For approximately $700.00,
-                                                consumers could purchase one of top-of-the-line Pocket PCs in 2003.
-                                                These days, customers are finding that prices have become much more
-                                                reasonable now that the newness is wearing off. For approximately
-                                                $350.00, a new Pocket PC can now be purchased.</p>
+                                        <h3 class="section-title style-1 mb-30 mt-30">Reviews</h3>
+                                        <!--Comments-->
+                                        <div class="comments-area style-2">
+                                            <div class="row">
+                                                <% review.forEach(element=> { %>
+
+                                                    <div class="col-lg-8">
+                                                        <h4 class="mb-30"></h4>
+                                                        <div class="comment-list">
+                                                            <div class="single-comment justify-content-between d-flex">
+                                                                <div class="user justify-content-between d-flex">
+                                                                    <div class="thumb text-center">
+                                                                        <img src="/public/imgs/page/avatar-6.jpg"
+                                                                            alt="">
+                                                                        <h6><a href="">
+                                                                                <%= element.name %>
+                                                                            </a></h6>
+                                                                        <p class="font-xxs"></p>
+                                                                    </div>
+                                                                    <div class="desc">
+                                                                        <div class="rating">
+                                                                            <% for (let i=0; i < element.star; i++) { %>
+                                                                                <i class="fa fa-star"
+                                                                                    style="color: gold;"></i>
+                                                                                <% } %>
+                                                                        </div>
+                                                                        <p>
+                                                                            <%= element.description %>
+                                                                        </p>
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <p class="font-xs mr-30">
+                                                                                    <%= element.date %>
+                                                                                </p>
+                                                                                <a href="#"
+                                                                                    class="text-brand btn-reply"> <i
+                                                                                        class="fi-rs-arrow-right"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                                        <!-- <div class="col-lg-4">
+                                                    <h4 class="mb-30">Customer reviews</h4>
+                                                    <div class="d-flex mb-30">
+                                                        <div class="product-rate d-inline-block mr-15">
+                                                            <div class="product-rating" style="width:90%">
+                                                            </div>
+                                                        </div>
+                                                        <h6>4.8 out of 5</h6>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <span>5 star</span>
+                                                        <div class="progress-bar" role="progressbar" style="width: 50%;"
+                                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <span>4 star</span>
+                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
+                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <span>3 star</span>
+                                                        <div class="progress-bar" role="progressbar" style="width: 45%;"
+                                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">45%
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <span>2 star</span>
+                                                        <div class="progress-bar" role="progressbar" style="width: 65%;"
+                                                            aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress mb-30">
+                                                        <span>1 star</span>
+                                                        <div class="progress-bar" role="progressbar" style="width: 85%;"
+                                                            aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%
+                                                        </div>
+                                                    </div>
+                                                    <a href="" class="font-xs text-muted">How are ratings
+                                                        calculated?</a>
+                                                </div> -->
+                                            </div>
                                         </div>
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
-                                                from synthetic materials, not natural like wool. Polyester suits become
-                                                creased easily and are known for not being breathable. Polyester suits
-                                                tend to have a shine to them compared to wool and cotton suits, this can
-                                                make the suit look cheap. The texture of velvet is luxurious and
-                                                breathable. Velvet is a great choice for dinner party jacket and can be
-                                                worn all year round.</p>
+                                        <div class="comment-form">
+                                            <h4 class="mb-15">Add a review</h4>
+                                            <div class="custom-star-rating"
+                                                style="display: inline-block;margin-bottom: 30px;">
+
+                                                <input type="radio" id="star5" name="rating" value="1"
+                                                    style="display: none;" /><label for="star5" id="5-star"
+                                                    title="5 stars"
+                                                    style="float: left;cursor: pointer;font-size: 24px;">&#9733;</label>
+                                                <input type="radio" id="star4" name="rating" value="2"
+                                                    style="display: none;" /><label for="star4" id="4-star"
+                                                    title="4 stars"
+                                                    style="float: left;cursor: pointer;font-size: 24px;">&#9733;</label>
+                                                <input type="radio" id="star3" name="rating" value="3"
+                                                    style="display: none;" /><label for="star3" id="3-star"
+                                                    title="3 stars"
+                                                    style="float: left;cursor: pointer;font-size: 24px;">&#9733;</label>
+                                                <input type="radio" id="star2" name="rating" value="4"
+                                                    style="display: none;" /><label for="star2" id="2-star"
+                                                    title="2 stars"
+                                                    style="float: left;cursor: pointer;font-size: 24px;">&#9733;</label>
+                                                <input type="radio" id="star1" name="rating" value="5"
+                                                    style="display: none;" /><label for="star1" id="1-star"
+                                                    title="1 stars"
+                                                    style="float: left;cursor: pointer;font-size: 24px;">&#9733;</label>
+                                            </div>
+                                            <p id="starErr" class="text-danger"></p>
+                                            <br>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-8 col-md-12">
+                                                    <input type="hidden" id="pdt" value="<%= product._id%>">
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <textarea class="form-control w-100" name="comment"
+                                                                    id="comment" cols="30" rows="9" onblur="disfun()"
+                                                                    placeholder="Write Comment"></textarea>
+                                                                <p id="disErr" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <input class="form-control" name="name" id="name"
+                                                                    onblur="namefun()"
+                                                                    onkeydown="return /[a-zA-Z]/i.test(event.key)"
+                                                                    type="text" placeholder="Name">
+                                                                <p id="nameErr" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <input class="form-control" name="email" id="email"
+                                                                    type="email" placeholder="Email"
+                                                                    onblur="emailfun()">
+                                                                <p id="emailErr" class="text-danger"></p>
+
+                                                            </div>
+                                                        </div>
+                                                        <p id="submitErr" class="text-danger"></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="button"
+                                                            onclick="review(`<%= product._id %>`)">Submit
+                                                            Review</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,22 +534,30 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/product-1.jpg">
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$67.24</h5>
-                            <div class="product__color__select">
+                <% let count=0; %>
+                    <% relatedpdt.forEach(element=> { %>
+                        <% if (count < 4) { %>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="/uploads/<%= element.image[0] %>">
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>
+                                            <%= element.name %>
+                                        </h6>
+                                        <a href="/productDetails/?id=<%= element._id %>" class="add-cart">+ Add To
+                                            Cart</a>
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <h5>₹<%= element.price.salesPrice %>
+                                        </h5>
+                                        <!-- <div class="product__color__select">
                                 <label for="pc-1">
                                     <input type="radio" id="pc-1">
                                 </label>
@@ -414,116 +567,13 @@
                                 <label class="grey" for="pc-3">
                                     <input type="radio" id="pc-3">
                                 </label>
+                            </div> -->
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/product-2.jpg">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="/public/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="/public/img/icon/compare.png" alt=""> <span>Compare</span></a>
-                                </li>
-                                <li><a href="#"><img src="/public/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$67.24</h5>
-                            <div class="product__color__select">
-                                <label for="pc-4">
-                                    <input type="radio" id="pc-4">
-                                </label>
-                                <label class="active black" for="pc-5">
-                                    <input type="radio" id="pc-5">
-                                </label>
-                                <label class="grey" for="pc-6">
-                                    <input type="radio" id="pc-6">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item sale">
-                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/product-3.jpg">
-                            <span class="label">Sale</span>
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="/public/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="/public/img/icon/compare.png" alt=""> <span>Compare</span></a>
-                                </li>
-                                <li><a href="#"><img src="/public/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Multi-pocket Chest Bag</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$43.48</h5>
-                            <div class="product__color__select">
-                                <label for="pc-7">
-                                    <input type="radio" id="pc-7">
-                                </label>
-                                <label class="active black" for="pc-8">
-                                    <input type="radio" id="pc-8">
-                                </label>
-                                <label class="grey" for="pc-9">
-                                    <input type="radio" id="pc-9">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/product-4.jpg">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="/public/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="/public/img/icon/compare.png" alt=""> <span>Compare</span></a>
-                                </li>
-                                <li><a href="#"><img src="/public/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Diagonal Textured Cap</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$60.9</h5>
-                            <div class="product__color__select">
-                                <label for="pc-10">
-                                    <input type="radio" id="pc-10">
-                                </label>
-                                <label class="active black" for="pc-11">
-                                    <input type="radio" id="pc-11">
-                                </label>
-                                <label class="grey" for="pc-12">
-                                    <input type="radio" id="pc-12">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <% count++; %>
+                                <% } %>
+                                    <% }) %>
             </div>
         </div>
     </section>
@@ -609,95 +659,255 @@
     <script src="path/to/jquery.min.js"></script>
     <script src="path/to/sweetalert2.all.min.js"></script>
     <script>
-     
+
+        const stars = document.querySelectorAll('.custom-star-rating input[type="radio"]');
+
+        let rating;
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+            
+                rating = star.value;
+            
+                if (rating == 5) {
+                    document.getElementById('1-star').style.color = '#ffc107'
+                    document.getElementById('2-star').style.color = '#ffc107'
+                    document.getElementById('3-star').style.color = '#ffc107'
+                    document.getElementById('4-star').style.color = '#ffc107'
+                    document.getElementById('5-star').style.color = '#ffc107'
+                }
+                if (rating == 4) {
+                    document.getElementById('1-star').style.color = '#4f5d77'
+                    document.getElementById('2-star').style.color = '#ffc107'
+                    document.getElementById('3-star').style.color = '#ffc107'
+                    document.getElementById('4-star').style.color = '#ffc107'
+                    document.getElementById('5-star').style.color = '#ffc107'
+                }
+                if (rating == 3) {
+                    document.getElementById('1-star').style.color = '#4f5d77'
+                    document.getElementById('2-star').style.color = '#4f5d77'
+                    document.getElementById('3-star').style.color = '#ffc107'
+                    document.getElementById('4-star').style.color = '#ffc107'
+                    document.getElementById('5-star').style.color = '#ffc107'
+                }
+                if (rating == 2) {
+                    document.getElementById('1-star').style.color = '#4f5d77'
+                    document.getElementById('2-star').style.color = '#4f5d77'
+                    document.getElementById('3-star').style.color = '#4f5d77'
+                    document.getElementById('4-star').style.color = '#ffc107'
+                    document.getElementById('5-star').style.color = '#ffc107'
+                } if (rating == 1) {
+                    document.getElementById('1-star').style.color = '#4f5d77'
+                    document.getElementById('2-star').style.color = '#4f5d77'
+                    document.getElementById('3-star').style.color = '#4f5d77'
+                    document.getElementById('4-star').style.color = '#4f5d77'
+                    document.getElementById('5-star').style.color = '#ffc107'
+                }
+            })
+        })
+
+        function disfun() {
+            const dis = document.getElementById("comment").value
+
+            if (dis == "") {
+                document.getElementById("disErr").innerHTML = "Please write your response"
+            } else {
+                document.getElementById("disErr").innerHTML = ""
+            }
+        }
+
+        function namefun() {
+            const name = document.getElementById('name').value
+            if (name == "") {
+                document.getElementById("nameErr").innerHTML = "please mention your name"
+            } else {
+                document.getElementById("nameErr").innerHTML = ""
+            }
+        }
+
+
+        function emailfun() {
+            const email = document.getElementById("email").value
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email == "") {
+                document.getElementById("emailErr").innerHTML = "please Enter your Email"
+            } else {
+                document.getElementById("emailErr").innerHTML = ""
+            }
+            if (!emailRegex.test(email)) {
+                document.getElementById("emailErr").innerHTML = "invalid format"
+            } else {
+                document.getElementById("emailErr").innerHTML = ""
+            }
+        }
+        function review(id) {
+            console.log('the id is' + id);
+            namefun()
+            disfun()
+            emailfun()
+
+            const nameErr = document.getElementById("nameErr")
+            const emailErr = document.getElementById("emailErr")
+            const disErr = document.getElementById("disErr")
+
+
+            if (nameErr.innerHTML || emailErr.innerHTML || disErr.innerHTML) {
+                // alert("hai")
+                document.getElementById("submitErr").innerHTML = "please fill the correct"
+
+                setTimeout(() => {
+                    document.getElementById("submitErr").innerHTML = ""
+                }, 2000)
+            } else if (rating == undefined) {
+                // alert("hello")
+                document.getElementById("starErr").innerHTML = "please put your Rating"
+
+                setTimeout(() => {
+                    document.getElementById("starErr").innerHTML = ""
+                }, 2000)
+            } else {
+
+                const dis = document.getElementById("comment").value
+
+                const name = document.getElementById('name').value
+
+                const email = document.getElementById("email").value
+                // function review(){
+                //     console.log('the id is',id);
+                //     const name = document.getElementById('name').value
+                //     const email = document.getElementById('email').value
+                //     const des = document.getElementById('comment').value
+                //     const id = document.getElementById('pdt').value
+                console.log('ithgs heree');
+                fetch('/review', {
+
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id, name, email, dis, rating })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top",
+                                showConfirmButton: false,
+                                timer: 1000,
+
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: "Your response had send successfully"
+                            }).then((result) => {
+                                window.location.href = `/productDetails?id=${data.id}`
+                            })
+                        }
+                    })
+
+            }
+        }
+
+        function updateStockDisplay(size, stock) {
+            const stockDisplay = document.getElementById('stock-value');
+            if (size && stockDisplay) {
+                stockDisplay.textContent = ` Available stock for size ${size} : ${stock}`;
+            }
+        }
+
         const sizeinput = document.getElementById('sizz')
-        function selectSizeS() {
+        function selectSizeS(size, pdtID) {
             const s = "s"
             fetch('/selects', {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ s })
+                body: JSON.stringify({ s, size, pdtID })
             }).then(response => response.json()).then(data => {
                 if (data) {
                     sizeinput.value = data.size
                     console.log(sizeinput.value)
+                    updateStockDisplay(data.size, data.stock);
                 }
             })
         }
-        function selectSizeM() {
+        function selectSizeM(size, pdtID) {
             const m = "m"
             fetch('/selectm', {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ m })
+                body: JSON.stringify({ m, size, pdtID })
             }).then(response => response.json()).then(data => {
                 if (data) {
                     sizeinput.value = data.size
                     console.log(sizeinput.value)
+                    updateStockDisplay(data.size, data.stock);
                 }
             })
         }
-        function selectSizeL() {
+        function selectSizeL(size, pdtID) {
             const l = "l"
             fetch('/selectl', {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ l })
+                body: JSON.stringify({ l, size, pdtID })
             }).then(response => response.json()).then(data => {
                 if (data) {
                     sizeinput.value = data.size
                     console.log(sizeinput.value)
+                    updateStockDisplay(data.size, data.stock);
                 }
             })
         }
-        
+
         function addToCart(productID) {
-    console.log('itd here......');
+            console.log('itd here......');
 
-    const quantity = parseInt(1);
-    const size = sizeinput.value;
+            const quantity = parseInt(1);
+            const size = sizeinput.value;
 
-    $.ajax({
-        url: '/addcart',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({ productID, size, quantity }),
-        success: function (data) {
-            if (data.success) {
-                // Item added successfully
-                console.log('the data is ', data);
-                swal.fire({
-                    title: 'Item added to the cart',
-                    icon: 'success',
-                    confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
-                }).then(function () {
-                    window.location.reload(); // or update the UI as needed
-                });
-            } else {
-               
-                // Item is already in the cart
-                swal.fire({  // Updated from 'swal.f' to 'swal.fire'
-                    title: 'Already in cart',
-                    text: data.message,
-                    icon: 'error',
-                    confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
-                });
-            }
-        },
-        error: function (error) {
-            console.error('Error:', error);
-            // Handle the error if needed
-        },
-    });
-}
+            $.ajax({
+                url: '/addcart',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ productID, size, quantity }),
+                success: function (data) {
+                    if (data.success) {
+                        // Item added successfully
+                        console.log('the data is ', data);
+                        swal.fire({
+                            title: 'Item added to the cart',
+                            icon: 'success',
+                            confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
+                        }).then(function () {
+                            window.location.reload(); // or update the UI as needed
+                        });
+                    } else {
 
-
+                        // Item is already in the cart
+                        swal.fire({  // Updated from 'swal.f' to 'swal.fire'
+                            title: 'Already in cart',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                    // Handle the error if needed
+                },
+            });
+        }
 
 
         function addToWishlist(productID) {

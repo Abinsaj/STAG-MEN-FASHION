@@ -15,7 +15,6 @@ const displayAddProduct = async(req,res)=>{
 
 const addProduct = async(req,res)=>{
     try {
-        console.log('getting here');
         const images = req.files
 
         const imageFile = images.map(image =>image.filename)
@@ -53,7 +52,6 @@ const addProduct = async(req,res)=>{
 const displayProductList = async(req,res)=>{
     try {
         const product = await Product.find({})
-        
         res.render('productList',{product})
     } catch (error) {
         console.log(error.message);
@@ -94,7 +92,6 @@ const postEditProduct = async(req,res)=>{
         const images = req.files
         const imageFile = await images.map(image => image.filename)
         const {name,description,salesPrice,regularPrice,category,small,medium,large} = req.body
-
         if (images.length>0) {
             await Product.findByIdAndUpdate({_id:pid},{$push:{image:{$each:imageFile}}})
         }
@@ -129,7 +126,7 @@ const postEditProduct = async(req,res)=>{
 
 const deleteImage = async(req,res)=>{
     try {
-        console.log('getting');
+
         const index = req.body.index
         const pdtId = req.body.id
         const product = await Product.findById({_id:pdtId})

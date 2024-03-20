@@ -8,6 +8,7 @@ const generatedOtp = require('../controllers/otpController/generateOtp')
 const Razorpay = require('razorpay');
 const Coupon = require('../models/couponSchema')
 const dateGenerator = require('../controllers/otpController/dateGenerator')
+const { log } = require('node:console')
 
 var instance = new Razorpay({
   key_id:"rzp_test_lTepvaZWAfuQBF",
@@ -55,6 +56,7 @@ const placeOrder = async(req,res)=>{
         const paymentMethod = req.body.paymentMethod
         const Totalprice = req.body.totalPrice 
         const coup = req.body.coupon
+        const discount = req.body.discount
         const coupon = await Coupon.findOne({couponcode:coup})
    
         if(paymentMethod=='COD'|| paymentMethod == 'razorpay'){
@@ -76,27 +78,23 @@ const placeOrder = async(req,res)=>{
                 address:uaddress,
                 products:cproduct,
                 coupon:coup,
+                discount:discount,
                 totalamount:Totalprice,
                 paymentmethod:paymentMethod,
-                createdAt:date
+                date:date
             })
             const myorder = await order.save()
 
             const typedreferalcode = userData.otherreferalcode
-            console.log('typed referal ',typedreferalcode);
             const refereduser = await User.findOne({referalcode:typedreferalcode})
-            console.log('refered user is ',refereduser);
             if(myorder){
                 if (typedreferalcode&&refereduser) {
                     const userorder = await Order.find({user:userData.email})
-                    console.log('userorder is ',userorder);
                     if (userorder.length == 1) {
                         const referalAmount = parseInt(500)
                         const otherwallet = await Wallet.findOneAndUpdate({user:refereduser._id},{$inc:{balance:referalAmount}})
-                        console.log(otherwallet);
                         const userreferalamount = parseInt(250)
                         const userwallet = await Wallet.findOneAndUpdate({user:userData._id},{$inc:{balance:userreferalamount}})
-                        console.log(userwallet);
                     }
                 }
             }
@@ -118,7 +116,7 @@ const placeOrder = async(req,res)=>{
 
             // const userreferalcode = userData.referalcode
           
-            res.status(200).json({success:true})
+            res.status(200).json({success:true,id:myorder._id})
         }else {
             res.status(400).json({success:false})
         }
@@ -130,6 +128,7 @@ const placeOrder = async(req,res)=>{
 
 const orderSuccess = async(req,res)=>{
     try {
+       
         res.render('ordersuccess')
     } catch (error) {
         console.log(error.message);
@@ -154,6 +153,8 @@ const getViewOrder = async(req,res)=>{
         const userID = req.session.user
         const orderID = req.query.id
         const order = await Order.find({_id:orderID}).populate("products.product")
+        console.log('the order :'+order);
+        
         res.render('viewOrder',{order,userID})
     } catch (error) {
         console.log(error.message);
@@ -256,6 +257,108 @@ const displayOrderDetailes = async(req,res)=>{
     }
 }
 
+const paymentfailed = async(req,res)=>{
+    try {
+        const user = req.session.user
+        const userData = await User.findOne({_id:user})
+        const cartID = req.body.cartID
+        const address = req.body.radiovalue
+        const uaddress = await Address.findOne({_id:address})
+        const price = req.body.totalPrice
+        const coupon = req.body.coupon
+        const paymentMethod = req.body.paymentMethod
+
+        const cart = await Cart.findOne({_id:cartID}).populate('items.productID')
+            const cproduct = cart.items.map((element=>{
+                let pdata = {
+                    product:element.productID,
+                    size:element.size,
+                    quantity:element.quantity
+                }
+                return pdata;
+            }))
+
+            const date = dateGenerator()
+            const order =   new Order({
+                user:userData.email,
+                address:uaddress,
+                products:cproduct,
+                coupon:coupon,
+                totalamount:price,
+                paymentmethod:paymentMethod,
+                date:date,
+                status:"Payment Failed"
+            })
+            const myorder = await order.save()
+            res.status(200).json({success:true,id:myorder._id})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const payAgain = async(req,res)=>{
+    try {
+        const orderId = req.body.id
+        console.log(orderId);
+        const orders = await Order.findOne({_id:orderId})
+        console.log('the orders is',orders);
+        const order = await instance.orders.create({
+            amount: orders.totalamount*100,
+            currency: "INR",
+            receipt: req.session.user
+        })
+        console.log('the orderis :',order);
+        res.json({orderID:order})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const successPayment = async(req,res)=>{
+    try {
+        const user = req.session.user
+        const {response,orderId,orderid} = req.body
+        console.log(req.body);
+        const {createHmac} = require('node:crypto')
+        const hash = createHmac("sha256",'Nf5XW1S8TbnegZtxx7LM3QsB')
+        .update(orderId + "|" + response.razorpay_payment_id,).digest('hex');
+
+        if(hash == response.razorpay_signature){
+            const order = await Order.findByIdAndUpdate({_id:orderid},{
+                $set:{
+                    status:"Confirmed"
+                }
+            })
+        } 
+
+        const myorder = await Order.findOne({_id:orderid})
+        let productArray=[]
+        myorder.products.forEach(element => {
+            let prodata = {
+                productId:element.product,
+                quantity:element.quantity,
+                size:element.size
+            }
+            productArray.push(prodata)
+        });
+        productArray.forEach(async(el)=>{
+            const product = await Product.findById({_id:el.productId})
+            console.log('the product is',product);
+            if(product.size[el.size].quantity <= 0){
+                return res.status(200).json({ success: false, message: 'Out of Stock' });
+            }else{
+            await Product.findByIdAndUpdate({_id:el.productId},{$inc:{[`size.${el.size}.quantity`]:-el.quantity}})
+            const cart = await Cart.findOneAndDelete({user:user})
+            }
+        })
+        res.json({success:true})
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports={
     placeOrder,
     orderSuccess,
@@ -267,5 +370,8 @@ module.exports={
     returnOrder,
     cancelReturn,
     createOrder,    
-    paymentsuccess
+    paymentsuccess,
+    paymentfailed,
+    payAgain,
+    successPayment
 }

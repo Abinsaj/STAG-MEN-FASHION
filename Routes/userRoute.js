@@ -12,6 +12,8 @@ userRoute.set("views","./views/Users");
 userRoute.use(bodyParser.json());
 userRoute.use(bodyParser.urlencoded({extended:true}));
 
+
+
 const userController = require("../controllers/userController")
 const cartController = require("../controllers/cartController")
 const orderController = require('../controllers/orderController')
@@ -19,9 +21,11 @@ const wishlistController = require('../controllers/wishlistController')
 const walletcontroller = require('../controllers/walletController')
 const couponController = require('../controllers/couponController')
 const productController = require('../controllers/productController')
+const reviewController = require('../controllers/reviewController')
 
 const auth = require("../middleware/userAuth")
-const blockAuth = require('../middleware/userBlock')
+const blockAuth = require('../middleware/userBlock');
+const { unsubscribe } = require("./userRoute");
 
 userRoute.get('/',userController.loadHome)
 
@@ -42,6 +46,7 @@ userRoute.post('/resendOTP',userController.resendOTP)
 
 userRoute.get('/profile',auth.isLogout,userController.userProfile)
 userRoute.get('/shop',userController.getShop)
+userRoute.get('/shop/sort',userController.getShop)
 
 userRoute.get('/addresses',auth.isLogout,userController.getaddresses)
 
@@ -64,7 +69,7 @@ userRoute.post('/increment',cartController.incrementProduct)
 userRoute.post('/decrement',cartController.decrementProduct)
 userRoute.patch('/remove',cartController.deleteCart)
 
-// userRoute.get('/checkout',cartController.getCheckout)
+
 userRoute.get('/checkout',auth.isLogout,cartController.getCheckout)
 userRoute.get('/changePassword',auth.isLogout,userController.getChangePassword)
 userRoute.post('/changePassword',userController.postChangePassword)
@@ -88,11 +93,7 @@ userRoute.post('/resendotp',userController.postforgetResendOtp)
 userRoute.get('/changepass',userController.getPasswordset)
 userRoute.post('/changepass',userController.postPasswordset)
 
-userRoute.get('/lowtohigh',userController.productLowtohigh)
-userRoute.get('/hightolow',userController.productHightolow),
-userRoute.get('/aAzZ',userController.aAzZ)
-userRoute.get('/zZaA',userController.zZaA)
-userRoute.get('/newarrival',userController.newArrival)
+userRoute.get('/',userController.loadHome)
 
 userRoute.get('/wishlist',auth.isLogout,wishlistController.displayWishlist)
 userRoute.post('/addwishlist',wishlistController.addToWishlist),
@@ -107,6 +108,14 @@ userRoute.post('/applycoupon',couponController.applyCoupon)
 userRoute.post('/search',productController.searchProducts)
 
 userRoute.get('/category',userController.getCategory)
+userRoute.get('/category/sort',userController.getCategory)
+
+userRoute.post('/review',reviewController.addreview)
+userRoute.get('/invoice',userController.getInvoice)
+
+userRoute.post('/paymentfailed',orderController.paymentfailed)
+userRoute.post('/payagain',orderController.payAgain)
+userRoute.post('/successpayment',orderController.successPayment)
 
 
 module.exports = userRoute

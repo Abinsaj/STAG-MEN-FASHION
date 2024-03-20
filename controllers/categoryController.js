@@ -1,3 +1,4 @@
+const { disconnect } = require('mongoose');
 const Category = require('../models/categorySchema')
 
 const displayAddCategories = async(req,res)=>{
@@ -12,9 +13,16 @@ const displayAddCategories = async(req,res)=>{
 const postAddCategories = async(req,res)=>{
     try {
         const {name,description} = req.body
-        const CategoryExist = await Category.findOne({name:name})
-        if (CategoryExist) {
+        const categories = await Category.find({}); 
+        
+        const allNames = categories.map(category => category.name); 
+        
+        let unique = !allNames.some(catName => catName.toLowerCase() === name.toLowerCase()); 
+        
+
+        if (!unique) {
             const category = await Category.find({})
+
             res.render('Categories',{category,message:"Category already exist"})
         } else {
             const Categories = new Category({
@@ -28,6 +36,7 @@ const postAddCategories = async(req,res)=>{
                 const category = await Category.find({})
                 res.render('Categories',{category})
             } else {
+                const category = await Category.find({})
                 res.render('Categories',{category})
             } 
         }
@@ -90,11 +99,57 @@ const postEditCategory = async (req, res) => {
     }
 };
 
+const categoryOffer = async(req,res)=>{
+    try {
+        const category = await Category.find({})
+        res.render('categoryOffer',{category})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const getCategoryOffer = async(req,res)=>{
+    try {
+        const category = await Category.find({})
+        res.render('addcategoryoffer',{category})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const postCategoryOffer = async(req,res)=>{
+    try {
+        const {name,discount,startdate,enddate} = req.body
+        console.log(req.body);
+        const category = await Category.findOne({name:name})
+        console.log(category);
+        const offerdata = {
+            discount:discount,
+            startDate:startdate,
+            endDate:enddate
+        }
+
+        console.log('the offer data is',offerdata);
+        const categoryOffer = await Category.findByIdAndUpdate({_id:category._id},{
+            $set:{
+                offer:offerdata
+            }
+        })
+
+        res.redirect("/admin/categoryOffer")
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports = {
     displayAddCategories,
     postAddCategories,
     blockCategory,
     editCategory,
-    postEditCategory
+    postEditCategory,
+    categoryOffer,
+    getCategoryOffer,
+    postCategoryOffer 
 }

@@ -31,6 +31,10 @@ adminRoute.get("/adminLogin",auth.isLogin,adminController.loadAdmin)
 adminRoute.post("/adminLogin",adminController.PostAdminLogin)
 
 adminRoute.get("/adminDash",auth.isLogout,adminController.dashboard)
+adminRoute.get("/adminDash/monthdata",auth.isLogout,adminController.fetchMonthlySales)
+adminRoute.get("/adminDash/yeardata",auth.isLogout,adminController.fetchYearlySales)
+// adminRoute.get('/fetchlables',auth.isLogout,adminController.fetchCategory)
+
 
 adminRoute.get("/userslist",auth.isLogout,adminController.displayUser)
 adminRoute.get('/userStatus',auth.isLogout,adminController.unblockUser)
@@ -66,5 +70,9 @@ adminRoute.get('/blockCoupon',couponController.blockCoupon)
 adminRoute.get('/salesReport',adminController.getSalesReport)
 adminRoute.get('/salesDate',adminController.customDate)
 adminRoute.get('/data',adminController.filterDate)
+
+adminRoute.get('/categoryOffer',categoryController.categoryOffer)
+adminRoute.get('/addcategoryoffer',categoryController.getCategoryOffer)
+adminRoute.post('/addcategoryoffer',categoryController.postCategoryOffer)
 
 module.exports = adminRoute

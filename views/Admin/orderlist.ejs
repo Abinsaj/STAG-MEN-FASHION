@@ -45,6 +45,7 @@
                         <a href="productList">Product List</a>
                        
                         <a href="Categories">Categories</a>
+                        <a href="categoryOffer">Categoty Offer</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu active">
@@ -54,7 +55,7 @@
                     <div class="submenu">
                         <a href="orderlist">Order list </a>
                         
-                        <a href="orderdetails">Order detail</a>
+                   
                     </div>
                 </li>
                 <!-- <li class="menu-item has-submenu">
@@ -103,7 +104,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="salesReport"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="salesReport"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Sales Report</span>
                     </a>
                 </li>
@@ -203,9 +204,9 @@
                 <div>
                     <h2 class="content-title card-title">Order List </h2>
                 </div>
-                <div>
+                <!-- <div>
                     <input type="text" placeholder="Search order ID" class="form-control bg-white">
-                </div>
+                </div> -->
             </div>
             <div class="card mb-4">
                 <header class="card-header">
@@ -261,14 +262,14 @@
                                     <td><%= new Date(element.createdAt).toLocaleDateString() %></td>
                                     <td class="text-end">
                                         <a href="orderdetails?id=<%= element._id %>" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
+                                        <!-- <div class="dropdown">
                                             <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#">View detail</a>
                                                 <a class="dropdown-item" href="#">Edit info</a>
                                                 <a class="dropdown-item text-danger" href="#">Delete</a>
                                             </div>
-                                        </div> <!-- dropdown //end -->
+                                        </div> dropdown //end -->
                                     </td>
                                 </tr>
                                 <% }) %>
@@ -278,7 +279,7 @@
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
             <div class="pagination-area mt-15 mb-50">
-                <nav aria-label="Page navigation example">
+                <!-- <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-start">
                         <li class="page-item active"><a class="page-link" href="#">01</a></li>
                         <li class="page-item"><a class="page-link" href="#">02</a></li>
@@ -287,7 +288,7 @@
                         <li class="page-item"><a class="page-link" href="#">16</a></li>
                         <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
                     </ul>
-                </nav>
+                </nav> -->
             </div>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">

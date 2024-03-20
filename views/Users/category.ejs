@@ -109,7 +109,7 @@
                 <%} else { %>
                     <a href="login">Log in</a>
                 <%}%>
-                <a href="#">FAQs</a>
+           
             </div>
             <div class="offcanvas__top__hover">
                 <%if(userID){%>
@@ -151,7 +151,7 @@
                                 <%} else { %>
                                     <a href="login">Log in</a>
                                 <%}%>
-                                <a href="#">FAQs</a>
+                     
                             </div>
                             <div class="header__top__hover">
                                 <%if(userID){%>
@@ -197,7 +197,7 @@
                         
                         <ul>
                             <li><a href="/">Home</a></li>
-                            <li class="active"><a href="/shop">Shop</a></li>
+                            <li class=""><a href="/shop">Shop</a></li>
                             <li><a href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
@@ -259,12 +259,11 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__categories">
                                                 <ul class="nice-scroll">
-                                                    <li><a href="#">Shirt</a></li>
-                                                    <li><a href="#">T-shirt</a></li>
-                                                    <li><a href="#">Jeans</a></li>
-                                                    <li><a href="#">Sweaters & Hoodies</a></li>
-                                                    <li><a href="#">Activewear</a></li>
-                                                    <li><a href="#">Jackets & Coats</a></li>
+                                                    <% category.forEach(element => { %>
+                                                        <li><a onclick="searchCategory('<%= element._id %>')"><%= element.name %></a></li>
+                                                    <% }) %>
+                                                    
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -278,10 +277,10 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    <li><a href="/lowtohigh">Low To High</a></li>
-                                                    <li><a href="/hightolow">High To Low</a></li>
-                                                    <li><a href="/aAzZ">aA-zZ</a></li>
-                                                    <li><a href="zZaA">zZ-aA</a></li>
+                                                    <li><a href="/category/?id=<%= findCat._id%>&sort=lowtohigh">Low To High</a></li>
+                                                    <li><a href="/category/?id=<%= findCat._id%>&sort=hightolow">High To Low</a></li>
+                                                    <li><a href="/category/?id=<%= findCat._id%>&sort=aAzZ">aA-zZ</a></li>
+                                                    <li><a href="/category/?id=<%= findCat._id%>&sort=zZaA">zZ-aA</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -525,7 +524,10 @@
         }
     }
 
-    
+    function searchCategory(categoryID){
+        console.log('the category id is',categoryID);
+        window.location.href = `/category?id=${categoryID}`
+    }
 
 </script>
 <!-- <script>

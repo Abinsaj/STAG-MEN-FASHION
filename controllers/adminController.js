@@ -3,6 +3,7 @@ const User = require('../models/userSchema')
 const Order = require("../models/orderSchema")
 const Product = require("../models/productSchema")
 const Wallet = require('../models/walletSchema')
+const Category = require('../models/categorySchema')
 
 const loadAdmin = async (req, res) => {
     try {
@@ -20,7 +21,6 @@ const PostAdminLogin = async (req, res) => {
         const email = req.body.email
         const password = req.body.password
         const adminData = await Admin.findOne({ email: email })
-        console.log(adminData);
         if (adminData) {
             if (adminData.password == password) {
                 req.session.adminData = adminData
@@ -37,13 +37,137 @@ const PostAdminLogin = async (req, res) => {
 
 }
 
+const fetchMonthlySales = async (req, res) => {
+   
+    const monthlySales = Array.from({ length: 12 }, () => 0);
+    const orders = await Order.find({ status: "Delivered" });
+    for (const order of orders) {
+        const month = order.createdAt.getMonth();
+        monthlySales[month] += order.totalamount;
+    }
+    res.json({ monthlySales })
+};
+
+const fetchYearlySales = async (req, res) => {
+    try {
+        const START_YEAR = 2022;
+        const currentYear = new Date().getFullYear();
+        const yearlySales = Array.from({ length: currentYear - START_YEAR + 1 }, () => 0); 
+
+
+        const orders = await Order.find({ status: "Delivered" });
+
+
+        for (const order of orders) {
+            const year = order.createdAt.getFullYear();
+            yearlySales[year - START_YEAR] += order.totalamount;
+        }
+
+        res.json({ yearlySales, START_YEAR })
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 const dashboard = async (req, res) => {
     try {
-        res.render("adminDash")
+        const order = await Order.find({ status: "Delivered" }).populate('products.product');
+        let revenue = 0
+        order.forEach(element=>{
+            amount = element.totalamount
+            revenue+=amount
+        })
+        const totalOrder = await Order.find({}).count()
+        const bestSellingProducts = await Order.aggregate([
+            { $unwind: "$products" },
+ 
+            {
+                $group: {
+                    _id: "$products.product",
+                    totalQuantity: { $sum: "$products.quantity" }
+                }
+            },
+            { $sort: { totalQuantity: -1 } },
+            { $limit: 4 }
+        ]);
+
+        let topProductDetails = [];
+
+        if (bestSellingProducts.length > 0) {
+            for (const product of bestSellingProducts) {
+                const productDetails = await Product.findById(product._id);
+                topProductDetails.push({
+                    product: productDetails,
+                    totalQuantity: product.totalQuantity
+                });
+            }
+        }
+        console.log(topProductDetails);
+
+
+        const totalDeliveredProducts = await Order.aggregate([
+            
+            {
+                $group: {
+                    _id: null, 
+                    totalProducts: { $sum: { $size: "$products" } } 
+                }
+            }
+        ]);
+        
+        let totalProducts = 0;
+        
+        if (totalDeliveredProducts.length > 0) {
+            totalProducts = totalDeliveredProducts[0].totalProducts;
+        }
+       
+       
+
+        const categoryCounts = await Order.aggregate([
+            { $match: { status: 'Delivered' } },
+            { $unwind: "$products" },
+            { $lookup: { from: 'products', localField: 'products.product', foreignField: '_id', as: 'productDetails' } },
+            { $unwind: { path: "$productDetails", preserveNullAndEmptyArrays: true } }, 
+            { $lookup: { from: 'categories', localField: 'productDetails.category', foreignField: '_id', as: 'categoryDetails' } },
+            { $unwind: { path: "$categoryDetails", preserveNullAndEmptyArrays: true } },
+            { $group: { _id: "$categoryDetails.name", count: { $sum: { $ifNull: ["$products.quantity", 0] } } } }
+        ]);
+        console.log(categoryCounts);        
+
+        const category = await Category.find({})
+    
+        const categoryNames = [];
+        const categoryCountsMap = {};
+
+
+        category.forEach(cat => {
+            categoryNames.push(cat.name);
+        });
+
+
+        categoryNames.forEach(catName => {
+            categoryCountsMap[catName] = 0;
+        });
+
+
+        categoryCounts.forEach(catCount => {
+            const categoryName = catCount._id;
+            categoryCountsMap[categoryName] = catCount.count;
+        });
+
+
+        const categoryData = categoryNames.map(catName => categoryCountsMap[catName]);
+
+
+
+        const catnames = JSON.stringify(categoryNames)
+        res.render("adminDash", { topProductDetails, categoryData,categoryNames,revenue,totalOrder,totalProducts});
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
 
 const displayUser = async (req, res) => {
     try {
@@ -86,25 +210,26 @@ const adminchangestatus = async (req, res) => {
         const user = req.session.user
         const orderID = req.body.orderID
         const status = req.body.statusID
-        const aorder = await Order.findOne({_id:orderID})
-        if(aorder){
-        const corder = await Order.findByIdAndUpdate({ _id: orderID },
-            { $set: { status: status } }, { new: true })
-        if (corder.status == "Cancelled"||corder.status == "Returned") {
-            let productarray = []
-            corder.products.forEach((element) => {
-                let prodata = {
-                    productid: element.product,
-                    quantityid: element.quantity,
-                    size: element.size
-                }
-                productarray.push(prodata)
-            })
-        
-            productarray.forEach(async (el) => {
-                await Product.findByIdAndUpdate({ _id: el.productid }, { $inc: { [`size.${el.size}.quantity`]: el.quantityid } })
-            })
-        }
+        const aorder = await Order.findOne({ _id: orderID })
+        if (aorder) {
+            const corder = await Order.findByIdAndUpdate({ _id: orderID },
+                { $set: { status: status } }, { new: true })
+            res.status(200).json({ success: true })
+            if (corder.status == "Cancelled" || corder.status == "Returned") {
+                let productarray = []
+                corder.products.forEach((element) => {
+                    let prodata = {
+                        productid: element.product,
+                        quantityid: element.quantity,
+                        size: element.size
+                    }
+                    productarray.push(prodata)
+                })
+
+                productarray.forEach(async (el) => {
+                    await Product.findByIdAndUpdate({ _id: el.productid }, { $inc: { [`size.${el.size}.quantity`]: el.quantityid } })
+                })
+            }
             if (corder.paymentmethod = 'razorpay') {
                 const userr = corder.user
                 const wallet = await Wallet.find({ user: userr })
@@ -123,8 +248,8 @@ const adminchangestatus = async (req, res) => {
 
 const getSalesReport = async (req, res) => {
     try {
-        const order = await Order.find({})
-        console.log('the order is :', order);
+        const order = await Order.find({status:"Delivered"}).populate('products.product').sort({_id:-1})
+        console.log("the order is",order);
         res.render('salesReport', { order })
     } catch (error) {
         console.log(error.message);
@@ -134,19 +259,25 @@ const getSalesReport = async (req, res) => {
 const customDate = async (req, res) => {
     try {
         const date = req.query.value;
+        const date2 = req.query.value2
         const parts = date.split("-");
+        const parts2 = date2.split("_")
         const day = parseInt(parts[2], 10);
+        const day2 = parseInt(parts2[2], 10);
+
         const month = parseInt(parts[1], 10);
+        const month2 = parseInt(parts2[1], 10);
 
         const rotatedDate = day + "-" + month + "-" + parts[0];
-        console.log('teh rotated date is ',rotatedDate);
+        const rotatedDate2 = day2 + "_" + month2 + "_" + parts2[0]
+        console.log('teh rotated date is ', rotatedDate,rotatedDate2);
         const order = await Order.find({
             status: { $nin: ["Ordered", "Cancelled", "Shipped"] },
-            createdAt: rotatedDate,
-        });
-        console.log('the orders is ',order);
-    
-       
+            date: { $gte: rotatedDate, $lte: rotatedDate2 },
+        }).populate('products.product');
+        console.log('the orders is ', order);
+
+
         res.render("salesReport", { order });
     } catch (error) {
         console.log(error.message);
@@ -163,16 +294,16 @@ const filterDate = async (req, res) => {
 
         const currentDateString = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
 
-    
+
         if (sort === "Day") {
 
             orderDateQuery = currentDateString;
         } else if (sort === "Week") {
- 
+
             const firstDayOfWeek = new Date(currentDate);
             firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
             const lastDayOfWeek = new Date(currentDate);
-            lastDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 6); 
+            lastDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 6);
             const firstDayOfWeekString = `${firstDayOfWeek.getDate()}-${firstDayOfWeek.getMonth() + 1}-${firstDayOfWeek.getFullYear()}`;
             const lastDayOfWeekString = `${lastDayOfWeek.getDate()}-${lastDayOfWeek.getMonth() + 1}-${lastDayOfWeek.getFullYear()}`;
             orderDateQuery = {
@@ -180,7 +311,7 @@ const filterDate = async (req, res) => {
                 $lte: lastDayOfWeekString
             };
         } else if (sort === "Month") {
-            
+
             orderDateQuery = {
                 $regex: `-${currentDate.getMonth() + 1}-`
             };
@@ -196,15 +327,16 @@ const filterDate = async (req, res) => {
 
         const order = await Order.find({
             status: { $nin: ["Ordered", "Cancelled", "Shipped"] },
-            createdAt:orderDateQuery
-        });
-        console.log('the order is ',order);
-       
+            date: orderDateQuery
+        }).populate('products.product');
+        console.log('the order is ', order);
+
         res.render("salesReport", { order });
     } catch (error) {
         console.log(error.message);
     }
 }
+
 
 module.exports = {
     loadAdmin,
@@ -216,5 +348,7 @@ module.exports = {
     adminchangestatus,
     getSalesReport,
     customDate,
-    filterDate
+    filterDate,
+    fetchMonthlySales,
+    fetchYearlySales
 }  
