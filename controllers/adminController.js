@@ -19,6 +19,7 @@ const PostAdminLogin = async (req, res) => {
 
     try {
         const email = req.body.email
+        console.log(email);
         const password = req.body.password
         const adminData = await Admin.findOne({ email: email })
         if (adminData) {

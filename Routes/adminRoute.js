@@ -63,16 +63,18 @@ adminRoute.post('/orderdetails',adminController.adminchangestatus)
 adminRoute.get('/couponList',auth.isLogout,couponController.displayCoupon)
 adminRoute.get('/addCoupon',auth.isLogout,couponController.displayAddCoupon)
 adminRoute.post('/addCoupon',couponController.addCoupon)
-adminRoute.get('/editCoupon',couponController.getEditCoupon)
+adminRoute.get('/editCoupon',auth.isLogout,couponController.getEditCoupon)
 adminRoute.post('/editCoupon',couponController.postEditCoupon)
-adminRoute.get('/blockCoupon',couponController.blockCoupon)
+adminRoute.get('/blockCoupon',auth.isLogout,couponController.blockCoupon)
 
-adminRoute.get('/salesReport',adminController.getSalesReport)
-adminRoute.get('/salesDate',adminController.customDate)
-adminRoute.get('/data',adminController.filterDate)
+adminRoute.get('/salesReport',auth.isLogout,adminController.getSalesReport)
+adminRoute.get('/salesDate',auth.isLogout,adminController.customDate)
+adminRoute.get('/data',auth.isLogout,adminController.filterDate)
 
-adminRoute.get('/categoryOffer',categoryController.categoryOffer)
-adminRoute.get('/addcategoryoffer',categoryController.getCategoryOffer)
+adminRoute.get('/categoryOffer',auth.isLogout,categoryController.categoryOffer)
+adminRoute.get('/addcategoryoffer',auth.isLogout,categoryController.getCategoryOffer)
 adminRoute.post('/addcategoryoffer',categoryController.postCategoryOffer)
+
+
 
 module.exports = adminRoute

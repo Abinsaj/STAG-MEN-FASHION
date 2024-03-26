@@ -8,18 +8,13 @@ const adminRoute = require("./Routes/adminRoute")
 const nocache = require("nocache")
 require('dotenv').config()
 
-
-
 app.use('/public',express.static(path.join(__dirname,"/public")));
 app.use('/uploads',express.static(path.join(__dirname,"/uploads")));
 
 app.use(nocache())
 
-
-
 app.use('/',userRoute)
 app.use("/admin",adminRoute)
-
 
 
 app.listen(5050,()=>{
