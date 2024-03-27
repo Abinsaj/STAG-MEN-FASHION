@@ -108,7 +108,7 @@ userRoute.post('/applycoupon',couponController.applyCoupon)
 userRoute.post('/search',productController.searchProducts)
 
 userRoute.get('/category',auth.isLogout,userController.getCategory)
-userRoute.get('/category/sort',auth.isLogout,userController.getCategory)
+// userRoute.get('/category/sort',auth.isLogout,userController.getCategory)
 
 userRoute.post('/review',reviewController.addreview)
 userRoute.get('/invoice',auth.isLogout,userController.getInvoice)

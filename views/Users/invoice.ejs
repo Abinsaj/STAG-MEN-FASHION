@@ -53,7 +53,7 @@
 
             <div
                 class=" d-md-flex justify-content-between align-items-center border-top border-bottom border-primary my-5 py-3">
-                <h2 class="display-6 fw-bold m-0">Invoice V2 </h2>
+                <!-- <h2 class="display-6 fw-bold m-0">Invoice V2 </h2> -->
                 
 
             </div>
@@ -64,10 +64,10 @@
                         <tr>
                             <th scope="col">Product</th>
                             <th scope="col">Coupon</th>
-                            <th scope="col">Discount</th>
+                            
                             <th scope="col">Product Price</th>                          
                             <th scope="col">Quantity</th>
-                            <th scope="col">Total Amount</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
@@ -77,26 +77,61 @@
                                 <td><%= el.product.name %></td>
                                 <% if (element.coupon == "") { %>
                                     <td>No Coupon</td>
-                                    <td>No discount</td>
+                             
                                 <% } else {%>
-                                <td><%= element.coupon %></td>
-                                <% var percentage = ((el.product.price.salesPrice * el.quantity - element.totalamount) / (el.product.price.salesPrice * el.quantity)) * 100; %>
-
-                                <td><%= percentage.toFixed(0) %>%</td>
+                             
                                 <% } %>
-                                <td><%= el.product.price.salesPrice %></td>                              
+                                <td><%= el.amount %></td>                              
                                 <td><%= el.quantity %></td>
-                                <td><%= element.totalamount %></td>
+                                <% }) %>
+                                <% }) %>
+                                
                             </tr>
-                        <% }) %>
-                    <% }) %>
+                     
                     </tbody>
                 </table>
             </div>
 
 
             <div class="d-md-flex justify-content-between my-5">
+                <div class="col-lg-6 col-md-12">
+                    <div class="border p-md-4 p-30 border-radius cart-totals">
+                        <div class="heading_s1 mb-3">
+                            <h4></h4>
+                        </div>
+                        <div class="table-responsive">
+                            
+                                
+                                <table class="table">
 
+                                    <tbody>
+                                        <% order.forEach(element => { %>
+                                        <tr>
+                                            <td class="cart_total_label">Sub Total</td>
+                                            <td class="">
+                                              
+                                                <span class="font-lg fw-900 text-brand">  
+                                                  <%= element.totalamount %>
+                                                </span>
+                                                
+                                            </td>
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td class="cart_total_label">Total</td>
+                                            <td class=""><strong><span class="font-xl fw-900 text-brand">
+                                                <%= element.totalamount %>  
+                                                    </span></strong></td>
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+
+                                </table>
+                            
+                        </div>
+
+                    </div>
+                </div>
                 <!-- <div>
                     <h5 class="fw-bold my-4">Payment Info</h5>
                     <ul class="list-unstyled">

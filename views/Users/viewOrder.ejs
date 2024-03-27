@@ -219,7 +219,7 @@
                                                         <div class="">
                                                             <a href="#" class="qty-down"></a>
                                                             <span class="qty-val">
-                                                                <%= el.product.price.salesPrice %>
+                                                                <%= el.amount %>
                                                             </span>
                                                             <a href="#" class="qty-up"></a>
                                                         </div>
@@ -305,14 +305,19 @@
                                 </div>
                                 <div class="table-responsive">
                                     <% order.forEach(element=>{%>
+                                        
                                         <table class="table">
 
                                             <tbody>
                                                 <tr>
                                                     <td class="cart_total_label">Sub Total</td>
-                                                    <td class=""><span class="font-lg fw-900 text-brand">
+                                                    <td class="">
+                                                      
+                                                        <span class="font-lg fw-900 text-brand">  
                                                             <%= element.totalamount %>
-                                                        </span></td>
+                                                        </span>
+                                                        
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="cart_total_label">Discount</td>

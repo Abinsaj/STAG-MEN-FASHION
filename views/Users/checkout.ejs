@@ -294,8 +294,10 @@
                                     <tbody>
 
                                         <tr>
+                                          
                                             <% if(locals.ucart){%>
                                                 <% ucart.items.forEach(element=> {%>
+                                        
                                                     <td class="image product-thumbnail"><img
                                                             src="/uploads/<%= element.productID.image[0] %>" alt="#">
                                                     </td>
@@ -306,7 +308,7 @@
                                                             <%= element.quantity %>
                                                         </span>
                                                     </td>
-                                                    <td>
+                                                    <td class="offerprice">
                                                         <%= element.price %>
                                                     </td>
                                         </tr>
@@ -511,6 +513,9 @@
             const coupon = document.getElementById('coup').value
             const dis = document.getElementById('discount')
             const discount = dis.textContent
+            const offerPriceElements = document.querySelectorAll('.offerprice'); 
+            const offerPrices = Array.from(offerPriceElements).map(element => parseFloat(element.textContent));
+            console.log(offerPrices);
 
             radiobtn.forEach(element => {
 
@@ -603,12 +608,15 @@
                         })
                 } else
                     if (paymentMethod == 'COD') {
+                        const offerPriceElements = document.querySelectorAll('.offerprice'); 
+                        const offerPrices = Array.from(offerPriceElements).map(element => parseFloat(element.textContent));
+                        console.log(offerPrices);
                         fetch('/cod', {
                             method: 'post',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ cartID, radiovalue, paymentMethod, totalPrice, coupon,discount })
+                            body: JSON.stringify({ cartID, radiovalue, paymentMethod, totalPrice, coupon,discount,offerPrices })
                         })
                             .then(response => response.json())
                             .then(data => {
@@ -623,10 +631,7 @@
 
         async function applyCoupon(totalprice) {
             const couponcode = document.getElementById('coup').value
-            console.log('iths hereeeeeerrrrr');
-            console.log('the coupon code is:',couponcode);
-            console.log('the total price is :',totalprice);
-
+            
             fetch('/applycoupon', {
                 method: 'post',
                 headers: {

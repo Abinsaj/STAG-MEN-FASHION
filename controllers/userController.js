@@ -12,6 +12,7 @@ const { v4:uuidv4} = require('uuid')
 const Category = require('../models/categorySchema')
 const Order = require('../models/orderSchema')
 const Review = require('../models/reviewSchema')
+const {ObjectId} = require('mongodb')
 
 
 
@@ -194,8 +195,11 @@ const verifyLogin = async (req, res) => {
 
                 res.redirect('/')
             }
-        } else {
-            res.render('login', { message: "Incorrect password or email" })
+            else {
+                res.render('login', { message: "Incorrect password or email" })
+            }
+        } else{
+            res.render('login',{message:"user does not exist"})
         }
     } catch (error) {
         console.log(error.message);
@@ -467,25 +471,25 @@ const getShop = async (req, res) => {
 
         const sort = req.query.sort
         if(sort == 'lowtohigh'){
-            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': 1}).limit(pageSize)
-            res.render('shop', { user, product, userID,numofPage,category })
+            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': 1}).skip(pdtskip).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category ,sort})
         }
         if(sort == 'hightolow'){
 
-            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': -1}).limit(pageSize)
-            res.render('shop', { user, product, userID,numofPage,category })
+            const product = await Product.find({ isActive: true }).sort({'price.salesPrice': -1}).skip(pdtskip).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category,sort })
         }
         if(sort == 'aAzZ'){
-            const product = await Product.find({ isActive: true }).sort({name: 1}).limit(pageSize)
-            res.render('shop', { user, product, userID,numofPage,category })
+            const product = await Product.find({ isActive: true }).sort({name: 1}).skip(pdtskip).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category,sort })
         }
         if(sort == 'zZaA'){
-            const product = await Product.find({ isActive: true }).sort({name: -1}).limit(pageSize)
-            res.render('shop', { user, product, userID,numofPage,category })
+            const product = await Product.find({ isActive: true }).sort({name: -1}).skip(pdtskip).limit(pageSize)
+            res.render('shop', { user, product, userID,numofPage,category,sort })
         }
 
-        const product = await Product.find({ isActive: true }).skip(pdtskip).limit(pageSize)
-        res.render('shop', { user, product, userID,numofPage,category })
+        const product = await Product.find({ isActive: true }).skip(pdtskip).skip(pdtskip).limit(pageSize)
+        res.render('shop', { user, product, userID,numofPage,category,sort })
     } catch (error) {
         console.log(error.message);
     }
@@ -642,31 +646,35 @@ const getCategory=async(req,res)=>{
         const page = req.query.page || 1
         const pageSize = 9
         const pdtskip = (page-1)*pageSize
-        const pdtcount = await Product.find({ isActive: true }).count()
-        const numofPage = Math.ceil(pdtcount/pageSize)
-
         const id=req.query.id;
+        const pdtcount = await Product.find({category:new ObjectId(id),isActive: true }).count()
+        const numofPage = Math.ceil(pdtcount/pageSize)
+        console.log(pdtcount);
+        console.log(numofPage);
         const findCat=await Category.findById({_id:id})
         const sort = req.query.sort
         if(sort == 'lowtohigh'){
-            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': 1}).limit(pageSize)
-            res.render('category',{product,userID,numofPage,category,findCat})
+            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': 1}).skip(pdtskip).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat,catid:id})
         }
-        if(sort == 'hightolow'){
-            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': -1}).limit(pageSize)
-            res.render('category',{product,userID,numofPage,category,findCat})
+        else if(sort == 'hightolow'){
+            const product = await Product.find({category:findCat._id}).sort({'price.salesPrice': -1}).skip(pdtskip).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat,catid:id})
         }
-        if(sort == 'aAzZ'){
-            const product = await Product.find({category:findCat._id}).sort({ name: 1 }).limit(pageSize)
-            res.render('category',{product,userID,numofPage,category,findCat})
+        else if(sort == 'aAzZ'){
+            const product = await Product.find({category:findCat._id}).sort({ name: 1 }).skip(pdtskip).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat,catid:id})
         }
-        if(sort == 'zZaA'){
-            const product = await Product.find({category:findCat._id}).sort({ name: -1 }).limit(pageSize)
-            res.render('category',{product,userID,numofPage,category,findCat})
+        else if(sort == 'zZaA'){
+            const product = await Product.find({category:findCat._id}).sort({ name: -1 }).skip(pdtskip).limit(pageSize)
+            res.render('category',{product,userID,numofPage,category,findCat,catid:id})
         }
-        const product = await Product.find({category:findCat._id}).skip(pdtskip).limit(pageSize)
+        else{
+            const product = await Product.find({category:findCat._id}).skip(pdtskip).limit(pageSize)
         
-        res.render('category', { user, product, userID, numofPage, category, findCat })
+            res.render('category', { user, product, userID, numofPage, category, findCat,catid:id })
+        }
+        
         
     } catch (error) {
         console.log(error.message)
@@ -676,9 +684,7 @@ const getCategory=async(req,res)=>{
 const getInvoice = async(req,res)=>{
     try {
         const oid = req.query.id
-        console.log('the order id is',oid);
-        const order = await Order.find({_id:oid}).populate("products.product")
-        console.log('the order is',order);
+        const order = await Order.find({_id:oid}).populate("products.product") 
         res.render('invoice',{order})
     } catch (error) {
         console.log(error.message);

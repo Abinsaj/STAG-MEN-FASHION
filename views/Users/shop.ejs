@@ -279,10 +279,10 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    <li><a href="/shop/?sort=lowtohigh">Low To High</a></li>
-                                                    <li><a href="/shop/?sort=hightolow">High To Low</a></li>
-                                                    <li><a href="/shop/?sort=aAzZ">aA-zZ</a></li>
-                                                    <li><a href="/shop/?sort=zZaA">zZ-aA</a></li>
+                                                    <li><a href="/shop?sort=lowtohigh">Low To High</a></li>
+                                                    <li><a href="/shop?sort=hightolow">High To Low</a></li>
+                                                    <li><a href="/shop?sort=aAzZ">aA-zZ</a></li>
+                                                    <li><a href="/shop?sort=zZaA">zZ-aA</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -330,7 +330,7 @@
                             <div class="product__pagination"> 
                                 <% for( let i = 1; i <= numofPage; i++ ) { %>
                                     
-                                    <a class="active" href="/shop/?page=<%= i %>"><%= i %></a>
+                                    <a class="active" href="/shop?sort=<%= locals.sort ? locals.sort : '' %>&page=<%= i %>"><%= i %></a>
                                   
                                 <% } %>
                             </div>

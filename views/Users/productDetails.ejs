@@ -870,8 +870,6 @@
         }
 
         function addToCart(productID) {
-            console.log('itd here......');
-
             const quantity = parseInt(1);
             const size = sizeinput.value;
 
@@ -882,29 +880,29 @@
                 data: JSON.stringify({ productID, size, quantity }),
                 success: function (data) {
                     if (data.success) {
-                        // Item added successfully
-                        console.log('the data is ', data);
+       
+                
                         swal.fire({
                             title: 'Item added to the cart',
                             icon: 'success',
-                            confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
+                            confirmButtonText: 'OK',  
                         }).then(function () {
-                            window.location.reload(); // or update the UI as needed
+                            window.location.reload(); 
                         });
                     } else {
 
-                        // Item is already in the cart
-                        swal.fire({  // Updated from 'swal.f' to 'swal.fire'
+      
+                        swal.fire({  
                             title: 'Already in cart',
                             text: data.message,
                             icon: 'error',
-                            confirmButtonText: 'OK',  // Updated from 'button' to 'confirmButtonText'
+                            confirmButtonText: 'OK',  
                         });
                     }
                 },
                 error: function (error) {
                     console.error('Error:', error);
-                    // Handle the error if needed
+              
                 },
             });
         }

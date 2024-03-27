@@ -49,7 +49,6 @@ const placeOrder = async(req,res)=>{
     try {
         const user = req.session.user
         const userData = await User.findOne({_id:user})
-        console.log('userData is ',userData);
         const cartID = req.body.cartID
         const address = req.body.radiovalue
         const uaddress = await Address.findOne({_id:address})
@@ -61,12 +60,15 @@ const placeOrder = async(req,res)=>{
    
         if(paymentMethod=='COD'|| paymentMethod == 'razorpay'){
             const cart = await Cart.findOne({_id:cartID}).populate('items.productID')
+            console.log('the cart is',cart);
             const cproduct = cart.items.map((element=>{
                 let pdata = {
                     product:element.productID,
                     size:element.size,
-                    quantity:element.quantity
+                    quantity:element.quantity,
+                    amount:element.amount
                 }
+                console.log(pdata);
                 return pdata;
             }))
             if(coupon){
@@ -79,6 +81,7 @@ const placeOrder = async(req,res)=>{
                 products:cproduct,
                 coupon:coup,
                 discount:discount,
+               
                 totalamount:Totalprice,
                 paymentmethod:paymentMethod,
                 date:date
