@@ -276,7 +276,8 @@ const paymentfailed = async(req,res)=>{
                 let pdata = {
                     product:element.productID,
                     size:element.size,
-                    quantity:element.quantity
+                    quantity:element.quantity,
+                    amount:element.amount
                 }
                 return pdata;
             }))
