@@ -164,7 +164,7 @@ const dashboard = async (req, res) => {
 
 
         const catnames = JSON.stringify(categoryNames)
-        res.render("adminDash", { topProductDetails, categoryData,categoryNames,revenue,totalOrder,totalProducts});
+        res.render("admindash", { topProductDetails, categoryData,categoryNames,revenue,totalOrder,totalProducts});
     } catch (error) {
         console.log(error.message);
     }
