@@ -73,6 +73,7 @@ const fetchYearlySales = async (req, res) => {
 
 const dashboard = async (req, res) => {
     try {
+        console.log('its hererererer')
         const order = await Order.find({ status: "Delivered" }).populate('products.product');
         let revenue = 0
         order.forEach(element=>{
