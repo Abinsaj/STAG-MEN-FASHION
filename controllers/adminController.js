@@ -73,7 +73,6 @@ const fetchYearlySales = async (req, res) => {
 
 const dashboard = async (req, res) => {
     try {
-        console.log('its hererererer')
         const order = await Order.find({ status: "Delivered" }).populate('products.product');
         let revenue = 0
         order.forEach(element=>{
@@ -105,8 +104,6 @@ const dashboard = async (req, res) => {
                 });
             }
         }
-        console.log(topProductDetails);
-
 
         const totalDeliveredProducts = await Order.aggregate([
             
@@ -123,9 +120,7 @@ const dashboard = async (req, res) => {
         if (totalDeliveredProducts.length > 0) {
             totalProducts = totalDeliveredProducts[0].totalProducts;
         }
-       
-       
-
+    
         const categoryCounts = await Order.aggregate([
             { $match: { status: 'Delivered' } },
             { $unwind: "$products" },
@@ -142,29 +137,23 @@ const dashboard = async (req, res) => {
         const categoryNames = [];
         const categoryCountsMap = {};
 
-
         category.forEach(cat => {
             categoryNames.push(cat.name);
         });
 
-
         categoryNames.forEach(catName => {
             categoryCountsMap[catName] = 0;
         });
-
 
         categoryCounts.forEach(catCount => {
             const categoryName = catCount._id;
             categoryCountsMap[categoryName] = catCount.count;
         });
 
-
         const categoryData = categoryNames.map(catName => categoryCountsMap[catName]);
 
-
-
         const catnames = JSON.stringify(categoryNames)
-        res.render("admindash", { topProductDetails, categoryData,categoryNames,revenue,totalOrder,totalProducts});
+        res.render("admindash", { topProductDetails, categoryData, categoryNames, revenue,totalOrder,totalProducts});
     } catch (error) {
         console.log(error.message);
     }

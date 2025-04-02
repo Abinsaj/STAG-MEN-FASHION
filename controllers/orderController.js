@@ -60,7 +60,7 @@ const placeOrder = async(req,res)=>{
    
         if(paymentMethod=='COD'|| paymentMethod == 'razorpay'){
             const cart = await Cart.findOne({_id:cartID}).populate('items.productID')
-            console.log('the cart is',cart);
+
             const cproduct = cart.items.map((element=>{
                 let pdata = {
                     product:element.productID,

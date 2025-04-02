@@ -211,9 +211,9 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <% order.forEach(element=>{ %> 
+                                                        <% order.forEach((element,index)=>{ %> 
                                                         <tr>
-                                                            <td><%= element._id %></td>
+                                                            <td><%= (index+1)*321%></td>
                                                             <td><%= element.date %></td>
                                                             <td><%= element.status %></td>
                                                             <td><%= element.totalamount %></td>

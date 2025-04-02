@@ -156,14 +156,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <!-- <div class="col-lg-6">
                                         <div class="mb-4">
                                             <label class="form-label">Maximum Discount</label>
                                             <input placeholder="Type here" name="maxdiscount" type="text"
                                                 id="maxdiscount" class="form-control">
                                             <p><span id="error3" style="display: none; color: red;"></span></p>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -222,14 +222,14 @@
     <script>
        const cname = document.getElementById('couponname');
 const mindisc = document.getElementById('mindiscount');
-const maxdisc = document.getElementById('maxdiscount');
+// const maxdisc = document.getElementById('maxdiscount');
 const purchase = document.getElementById('minpurchase');
 const expiry = document.getElementById('expiry');
 const copform = document.getElementById('copform');
 
 const error1 = document.getElementById('error1');
 const error2 = document.getElementById('error2');
-const error3 = document.getElementById('error3');
+// const error3 = document.getElementById('error3');
 const error4 = document.getElementById('error4');
 const error5 = document.getElementById('error5');
 
@@ -254,14 +254,14 @@ function validateMinDiscount() {
     }
 }
 
-function validateMaxDiscount() {
-    const maxDiscVal = parseFloat(maxdisc.value.trim());
-    if (isNaN(maxDiscVal) || maxDiscVal < 0) {
-        showError(error3, "Please enter a valid maximum discount.");
-    } else {
-        hideError(error3);
-    }
-}
+// function validateMaxDiscount() {
+//     const maxDiscVal = parseFloat(maxdisc.value.trim());
+//     if (isNaN(maxDiscVal) || maxDiscVal < 0) {
+//         showError(error3, "Please enter a valid maximum discount.");
+//     } else {
+//         hideError(error3);
+//     }
+// }
 
 function validateMaxGreaterMin() {
     const minDiscount = parseFloat(mindisc.value.trim());
@@ -304,7 +304,7 @@ function hideError(errorElement) {
 
 cname.addEventListener('blur', validateCouponName);
 mindisc.addEventListener('blur', validateMinDiscount);
-maxdisc.addEventListener('blur', validateMaxDiscount);
+// maxdisc.addEventListener('blur', validateMaxDiscount);
 maxdisc.addEventListener('blur', validateMaxGreaterMin);
 purchase.addEventListener('blur', validateMinPurchase);
 expiry.addEventListener('blur', validateExpiryDate);
@@ -312,12 +312,12 @@ expiry.addEventListener('blur', validateExpiryDate);
 copform.addEventListener('submit', function (e) {
     validateCouponName();
     validateMinDiscount();
-    validateMaxDiscount();
+    // validateMaxDiscount();
     validateMaxGreaterMin();
     validateMinPurchase();
     validateExpiryDate();
 
-    if (error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML || error5.innerHTML) {
+    if (error1.innerHTML || error2.innerHTML || error4.innerHTML || error5.innerHTML) {
         e.preventDefault();
     }
 });

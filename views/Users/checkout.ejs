@@ -336,9 +336,13 @@
                                         <input type="text" id="coup" placeholder="Enter Coupon Code...">
                                     </div>
                                     <div class="form-group">
-                                        <button class="btn  btn-md"
-                                            onclick="applyCoupon(`<%= ucart.totalPrice %>`)"
-                                            name="">Apply Coupon</button>
+                                            <button class="btn btn-md" onclick="applyCoupon(`<%= ucart.totalPrice %>`)">
+                                                Apply Coupon
+                                            </button>
+                                            
+                                            <button class="btn btn-md btn-danger" id="cancelCouponBtn" style="display:none;" onclick="cancelCoupon(`<%= ucart.totalPrice %>`)">
+                                                Cancel Coupon
+                                            </button>
                                     </div>
                                 </table>
                                 
@@ -351,7 +355,7 @@
                                     <h5>Payment</h5>
                                 </div>
                                 <div class="payment_option">
-                                    <% if (ucart.totalPrice>2000) { %>
+                                    <% if (ucart.totalPrice<2000) { %>
                                         <div class="custome-radio">
                                             <input class="form-check-input" required="" type="radio" name="payment_option"
                                                 value="COD" id="exampleRadios3" checked="">
@@ -424,9 +428,8 @@
 
 
     </main>
-    <!-- Checkout Section End -->
+
     <div class="containerabove"></div>
-    <!-- Footer Section Begin -->
     <%-include('./layouts/footer.ejs')  %>
     <script>
         let radiovalue;
@@ -463,17 +466,15 @@
                         .then(data => {
                             const parsedAmount = parseInt(totalPrice)
                             const options = {
-                                "key": "rzp_test_lTepvaZWAfuQBF", // Enter the Key ID generated from the Dashboard
-                                "amount": 1000000, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "key": "rzp_test_lTepvaZWAfuQBF", 
+                                "amount": 1000000, 
                                 "currency": "INR",
                                 "name": "STAG MEN FASHION",
                                 "description": "Test Transaction",
                                 "image": "https://example.com/your_logo",
-                                "order_id": data.orderID.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                "order_id": data.orderID.id,
                                 "handler": function (response) {
-                                    // alert(response.razorpay_payment_id);
-                                    // alert(response.razorpay_order_id);
-                                    // alert(response.razorpay_signature)
+                                
                                     verify(response, data.orderID.id)
                                 },
                                 "prefill": {
@@ -578,6 +579,8 @@
                         totalPriceElement.textContent = `${data.discounted}`;
                         const discount = document.getElementById('discount')
                         discount.textContent = `${data.discount}`
+
+                        document.getElementById('cancelCouponBtn').style.display = 'inline-block';
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -619,6 +622,22 @@
             })
             
         }
+
+
+        function cancelCoupon(originalPrice) {
+    Swal.fire({
+        icon: 'info',
+        title: 'Coupon Removed!',
+        text: 'The discount has been removed.',
+    });
+
+    document.getElementById('totalprice').textContent = `RS ${originalPrice}`;
+    document.getElementById('discount').textContent = "0%";
+
+
+    document.getElementById('cancelCouponBtn').style.display = 'none';
+}
+
 
     </script>
     <!-- Js Plugins -->
